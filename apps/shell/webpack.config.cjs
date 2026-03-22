@@ -61,6 +61,9 @@ module.exports = (_, argv) => {
         __ORDERS_APP_ENTRY__: JSON.stringify(
           process.env.ORDERS_APP_ENTRY || "http://localhost:7101",
         ),
+        __ROOMS_APP_ENTRY__: JSON.stringify(
+          process.env.ROOMS_APP_ENTRY || "http://localhost:7102",
+        ),
       }),
     ],
     devServer: {

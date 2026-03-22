@@ -1,0 +1,14 @@
+<template>
+  <div class="room">
+    <h1>样板间 2</h1>
+  </div>
+</template>
+
+<script setup lang="ts">
+</script>
+
+<style scoped>
+.room {
+  text-align: center;
+}
+</style>

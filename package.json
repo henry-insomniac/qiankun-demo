@@ -4,10 +4,11 @@
   "private": true,
   "packageManager": "pnpm@10.28.2",
   "scripts": {
-    "dev": "concurrently -n shell,orders -c blue,green \"pnpm dev:shell\" \"pnpm dev:orders\"",
+    "dev": "concurrently -n shell,orders,rooms -c blue,magenta,green \"pnpm dev:shell\" \"pnpm dev:orders\" \"pnpm dev:rooms\"",
     "dev:shell": "pnpm --filter @qiankun-demo/shell dev",
     "dev:orders": "pnpm --filter @qiankun-demo/orders-app dev",
-    "build": "pnpm --filter @qiankun-demo/shell build && pnpm --filter @qiankun-demo/orders-app build",
+    "dev:rooms": "pnpm --filter @qiankun-demo/rooms-app dev",
+    "build": "pnpm --filter @qiankun-demo/shell build && pnpm --filter @qiankun-demo/orders-app build && pnpm --filter @qiankun-demo/rooms-app build",
     "lint": "eslint .",
     "typecheck": "pnpm -r run typecheck",
     "test": "vitest run",
