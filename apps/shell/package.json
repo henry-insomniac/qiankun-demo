@@ -1,0 +1,22 @@
+{
+  "name": "@qiankun-demo/shell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "webpack serve --config webpack.config.cjs --mode development",
+    "build": "webpack --config webpack.config.cjs --mode production",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@qiankun-demo/auth-sdk": "workspace:*",
+    "@qiankun-demo/contracts": "workspace:*",
+    "@qiankun-demo/design-tokens": "workspace:*",
+    "@qiankun-demo/shared-utils": "workspace:*",
+    "qiankun": "2.10.16",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1"
+  }
+}
+

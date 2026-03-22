@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@qiankun-demo/contracts": ["packages/contracts/src/index.ts"],
+      "@qiankun-demo/auth-sdk": ["packages/auth-sdk/src/index.ts"],
+      "@qiankun-demo/design-tokens": ["packages/design-tokens/src/index.ts"],
+      "@qiankun-demo/design-tokens/styles.css": ["packages/design-tokens/src/styles.css"],
+      "@qiankun-demo/shared-utils": ["packages/shared-utils/src/index.ts"]
+    }
+  }
+}
+

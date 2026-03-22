@@ -1,0 +1,46 @@
+:root {
+  --color-background: #f4f1eb;
+  --color-surface: #fffdf9;
+  --color-surface-strong: #fff7ea;
+  --color-text: #201910;
+  --color-text-muted: #665a4a;
+  --color-border: #dbcab6;
+  --color-accent: #c65d1f;
+  --color-accent-strong: #9f4310;
+  --color-success: #2e7d59;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --shadow-card: 0 14px 32px rgba(85, 56, 22, 0.08);
+  --font-sans: "IBM Plex Sans", "Noto Sans SC", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(circle at top left, rgba(198, 93, 31, 0.16), transparent 32%),
+    linear-gradient(180deg, #f9f5ee 0%, var(--color-background) 100%);
+  color: var(--color-text);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+

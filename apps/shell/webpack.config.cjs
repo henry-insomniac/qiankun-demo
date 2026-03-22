@@ -1,0 +1,77 @@
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const workspaceSources = [
+  path.resolve(__dirname, "src"),
+  path.resolve(__dirname, "../../packages/contracts/src"),
+  path.resolve(__dirname, "../../packages/auth-sdk/src"),
+  path.resolve(__dirname, "../../packages/design-tokens/src"),
+  path.resolve(__dirname, "../../packages/shared-utils/src"),
+];
+
+module.exports = (_, argv) => {
+  const isProduction = argv.mode === "production";
+
+  return {
+    mode: isProduction ? "production" : "development",
+    entry: path.resolve(__dirname, "src/index.tsx"),
+    devtool: isProduction ? "source-map" : "eval-cheap-module-source-map",
+    output: {
+      path: path.resolve(__dirname, "dist"),
+      filename: isProduction
+        ? "static/js/[name].[contenthash:8].js"
+        : "static/js/[name].js",
+      chunkFilename: isProduction
+        ? "static/js/[name].[contenthash:8].chunk.js"
+        : "static/js/[name].chunk.js",
+      publicPath: "/",
+      clean: true,
+    },
+    resolve: {
+      extensions: [".ts", ".tsx", ".js", ".jsx"],
+    },
+    module: {
+      rules: [
+        {
+          test: /\.[jt]sx?$/,
+          include: workspaceSources,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                ["@babel/preset-env", { targets: "defaults" }],
+                ["@babel/preset-react", { runtime: "automatic" }],
+                "@babel/preset-typescript",
+              ],
+            },
+          },
+        },
+        {
+          test: /\.css$/,
+          use: ["style-loader", "css-loader"],
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, "public/index.html"),
+      }),
+      new webpack.DefinePlugin({
+        __ORDERS_APP_ENTRY__: JSON.stringify(
+          process.env.ORDERS_APP_ENTRY || "http://localhost:7101",
+        ),
+      }),
+    ],
+    devServer: {
+      port: 7100,
+      hot: true,
+      historyApiFallback: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    },
+    stats: "minimal",
+  };
+};
+

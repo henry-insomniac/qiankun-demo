@@ -1,0 +1,16 @@
+{
+  "name": "@qiankun-demo/auth-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@qiankun-demo/contracts": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json"
+  }
+}
+
