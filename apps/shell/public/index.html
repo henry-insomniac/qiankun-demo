@@ -14,6 +14,12 @@
         }
 
         window.sessionStorage.removeItem(redirectKey);
+        if (redirectPath.charAt(0) === "#") {
+          var basePath = window.location.pathname.replace(/\/$/, "");
+          window.location.replace(basePath + "/" + redirectPath);
+          return;
+        }
+
         window.history.replaceState(null, "", redirectPath);
       })();
     </script>

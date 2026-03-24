@@ -2,7 +2,6 @@ import {
   assertMicroAppManifest,
   type MicroAppManifest,
 } from "@qiankun-demo/contracts";
-import { resolveShellPath } from "./basePath";
 
 declare const __ROOMS_APP_ENTRY__: string;
 
@@ -11,9 +10,9 @@ export const microAppManifests: MicroAppManifest[] = [
     name: "orders-app",
     domain: "orders",
     entry: __ORDERS_APP_ENTRY__,
-    activeRule: resolveShellPath("/orders"),
+    activeRule: "/orders",
     mountContainer: "#micro-app-slot",
-    routeBase: resolveShellPath("/orders"),
+    routeBase: "/orders",
     ownerTeam: "platform",
     version: "0.1.0",
     standaloneUrl: __ORDERS_APP_ENTRY__,
@@ -23,9 +22,9 @@ export const microAppManifests: MicroAppManifest[] = [
     name: "rooms-app",
     domain: "rooms",
     entry: __ROOMS_APP_ENTRY__,
-    activeRule: resolveShellPath("/rooms"),
+    activeRule: "/rooms",
     mountContainer: "#micro-app-slot",
-    routeBase: resolveShellPath("/rooms"),
+    routeBase: "/rooms",
     ownerTeam: "platform",
     version: "0.1.0",
     standaloneUrl: __ROOMS_APP_ENTRY__,

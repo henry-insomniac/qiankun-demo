@@ -11,6 +11,7 @@ const workspaceSources = [
 
 module.exports = (_, argv) => {
   const isProduction = argv.mode === "production";
+  const useHashRouting = process.env.USE_HASH_ROUTING === "true";
 
   return {
     mode: isProduction ? "production" : "development",
@@ -62,6 +63,9 @@ module.exports = (_, argv) => {
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "public/index.html"),
       }),
+      new (require("webpack")).DefinePlugin({
+        __USE_HASH_ROUTING__: JSON.stringify(useHashRouting),
+      }),
     ],
     devServer: {
       port: 7101,
@@ -74,4 +78,3 @@ module.exports = (_, argv) => {
     stats: "minimal",
   };
 };
-

@@ -7,6 +7,7 @@ import {
 
 import type { MicroAppManifest, ShellAppProps } from "@qiankun-demo/contracts";
 import { createLogger } from "@qiankun-demo/shared-utils";
+import { matchHashRoutePrefix, resolveShellPath, useHashRouting } from "./basePath";
 
 const logger = createLogger("shell");
 let registered = false;
@@ -30,7 +31,9 @@ export function bootstrapQiankun({
         name: manifest.name,
         entry: manifest.entry,
         container: manifest.mountContainer,
-        activeRule: manifest.activeRule,
+        activeRule: useHashRouting
+          ? () => matchHashRoutePrefix(manifest.activeRule)
+          : resolveShellPath(manifest.activeRule),
         loader: (loading) => onLoadingChange?.(loading),
         props: createProps(manifest),
       })),
@@ -83,4 +86,3 @@ export function bootstrapQiankun({
     started = true;
   }
 }
-

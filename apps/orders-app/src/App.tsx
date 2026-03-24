@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Link, Route, Routes, useParams } from "react-router-dom";
+import {
+  BrowserRouter,
+  HashRouter,
+  Link,
+  Route,
+  Routes,
+  useParams,
+} from "react-router-dom";
 
 import { createMockAuthClient } from "@qiankun-demo/auth-sdk";
 import type {
@@ -12,8 +19,35 @@ import { createLogger, createTraceId } from "@qiankun-demo/shared-utils";
 
 import "./styles.css";
 
+declare const __USE_HASH_ROUTING__: boolean;
+
 const standaloneAuthClient = createMockAuthClient();
 const standaloneLogger = createLogger("orders-app");
+
+const OrdersRouter = __USE_HASH_ROUTING__ ? HashRouter : BrowserRouter;
+
+function navigate(path: string, replace = false): void {
+  if (__USE_HASH_ROUTING__) {
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+    if (replace) {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}${window.location.search}#${normalizedPath}`,
+      );
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+      return;
+    }
+
+    window.location.hash = normalizedPath;
+    return;
+  }
+
+  const updateHistory = replace ? window.history.replaceState : window.history.pushState;
+  updateHistory.call(window.history, null, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
 
 const fallbackShellProps: ShellAppProps = {
   appName: "orders-app",
@@ -22,12 +56,10 @@ const fallbackShellProps: ShellAppProps = {
   auth: standaloneAuthClient,
   navigation: {
     push(path) {
-      window.history.pushState(null, "", path);
-      window.dispatchEvent(new PopStateEvent("popstate"));
+      navigate(path);
     },
     replace(path) {
-      window.history.replaceState(null, "", path);
-      window.dispatchEvent(new PopStateEvent("popstate"));
+      navigate(path, true);
     },
   },
   telemetry: {
@@ -140,7 +172,7 @@ export default function OrdersApp({
 
   return (
     <div className={`orders-app orders-app--theme-${themeMode}`}>
-      <BrowserRouter
+      <OrdersRouter
         basename={shellProps.routeBase}
         future={{
           v7_relativeSplatPath: true,
@@ -175,7 +207,7 @@ export default function OrdersApp({
             <Route path="/detail/:orderId" element={<OrderDetail />} />
           </Routes>
         </div>
-      </BrowserRouter>
+      </OrdersRouter>
     </div>
   );
 }

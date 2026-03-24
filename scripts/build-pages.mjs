@@ -54,6 +54,7 @@ execSync("pnpm build", {
   stdio: "inherit",
   env: {
     ...process.env,
+    USE_HASH_ROUTING: "true",
     PUBLIC_BASE_PATH: publicBasePath,
     SHELL_BASE_PATH: shellBasePath,
     ORDERS_APP_ENTRY: joinUnderBase(publicBasePath, "apps/orders/"),
@@ -86,7 +87,11 @@ writeFileSync(
     <script>
       (function () {
         var redirectKey = "gh-pages-spa-path";
-        var redirectPath = window.location.pathname + window.location.search + window.location.hash;
+        var publicBasePath = ${JSON.stringify(publicBasePath)};
+        var basePath = publicBasePath.replace(/\\/$/, "");
+        var pathname = window.location.pathname;
+        var logicalPath = pathname.indexOf(basePath) === 0 ? pathname.slice(basePath.length) || "/" : pathname;
+        var redirectPath = "#" + logicalPath + window.location.search + window.location.hash;
         window.sessionStorage.setItem(redirectKey, redirectPath);
         window.location.replace(${JSON.stringify(publicBasePath)});
       })();

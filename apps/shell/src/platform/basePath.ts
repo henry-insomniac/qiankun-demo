@@ -1,4 +1,4 @@
-function normalizeShellBasePath(basePath: string): string {
+export function normalizeShellBasePath(basePath: string): string {
   if (!basePath || basePath === "/") {
     return "";
   }
@@ -6,10 +6,56 @@ function normalizeShellBasePath(basePath: string): string {
   return basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
 }
 
+export function normalizeAppPath(path: string): string {
+  return path.startsWith("/") ? path : `/${path}`;
+}
+
 export const shellBasePath = normalizeShellBasePath(__SHELL_BASE_PATH__);
+export const useHashRouting = __USE_HASH_ROUTING__;
+
+export function resolveLogicalAppPath(path: string): string {
+  return normalizeAppPath(path);
+}
+
+export function resolveShellPathForMode(
+  path: string,
+  options: {
+    useHashRouting: boolean;
+    shellBasePath?: string;
+  },
+): string {
+  const normalizedPath = normalizeAppPath(path);
+
+  if (options.useHashRouting) {
+    return `#${normalizedPath}`;
+  }
+
+  const normalizedShellBasePath = normalizeShellBasePath(options.shellBasePath ?? "");
+
+  return normalizedShellBasePath
+    ? `${normalizedShellBasePath}${normalizedPath}`
+    : normalizedPath;
+}
 
 export function resolveShellPath(path: string): string {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return resolveShellPathForMode(path, {
+    useHashRouting,
+    shellBasePath,
+  });
+}
 
-  return shellBasePath ? `${shellBasePath}${normalizedPath}` : normalizedPath;
+export function matchHashRoutePrefixForPath(routePrefix: string, currentHash: string): boolean {
+  const normalizedPrefix = normalizeAppPath(routePrefix);
+  const normalizedCurrentPath =
+    (currentHash.replace(/^#/, "").split(/[?#]/, 1)[0] || "/").trim() || "/";
+
+  if (normalizedCurrentPath === normalizedPrefix) {
+    return true;
+  }
+
+  return normalizedCurrentPath.startsWith(`${normalizedPrefix}/`);
+}
+
+export function matchHashRoutePrefix(routePrefix: string): boolean {
+  return matchHashRoutePrefixForPath(routePrefix, window.location.hash);
 }

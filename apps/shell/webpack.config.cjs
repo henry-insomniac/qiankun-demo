@@ -32,6 +32,7 @@ module.exports = (_, argv) => {
   const shellBasePath = normalizeShellBasePath(
     process.env.SHELL_BASE_PATH || publicBasePath,
   );
+  const useHashRouting = process.env.USE_HASH_ROUTING === "true";
 
   return {
     mode: isProduction ? "production" : "development",
@@ -79,6 +80,7 @@ module.exports = (_, argv) => {
       }),
       new webpack.DefinePlugin({
         __SHELL_BASE_PATH__: JSON.stringify(shellBasePath),
+        __USE_HASH_ROUTING__: JSON.stringify(useHashRouting),
         __ORDERS_APP_ENTRY__: JSON.stringify(
           process.env.ORDERS_APP_ENTRY || "http://localhost:7101",
         ),

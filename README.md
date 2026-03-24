@@ -33,11 +33,12 @@ pnpm build:pages
 ## GitHub Pages
 
 - Workflow: `.github/workflows/pages.yml`
-- Trigger: push to `develop` or manual `workflow_dispatch`
+- Trigger: push to `main` or manual `workflow_dispatch`
 - Build output: `dist-pages/`
 - Default public URL pattern: `https://<user>.github.io/qiankun-demo/`
 
-本仓库的 Pages 部署保留 pathname 路由，并通过 `404.html + sessionStorage` 做单页应用回跳。
+本仓库的 Pages 部署使用 hash 路由，shell 页面推荐通过 `#/rooms`、`#/orders` 这类地址访问。
+如果用户直接访问 `/qiankun-demo/rooms` 这类 pathname 深链，`404.html` 会把它回跳到对应的 hash 路由。
 Shell 发布在仓库根路径下，微应用 entry 发布在：
 
 - `/qiankun-demo/apps/orders/`
