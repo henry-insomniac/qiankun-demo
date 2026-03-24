@@ -69,22 +69,32 @@ function ProfilePage() {
 
 function OrdersHostPage({ loading }: { loading: boolean }) {
   return (
-    <section className="shell-page-card shell-page-card--compact">
-      <span className="shell-badge">Micro App Host</span>
-      <h1>Orders 微应用容器</h1>
-      <p>当前路由进入 `/orders` 后，qiankun 会把微应用挂载到右侧容器里。</p>
-      <p>加载状态：{loading ? "加载中" : "已就绪"}</p>
+    <section className="shell-page-card shell-page-card--micro-brief">
+      <div className="shell-page-card__intro">
+        <span className="shell-badge">Micro App Host</span>
+        <h1>Orders 微应用容器</h1>
+        <p>当前路由进入 `/orders` 后，qiankun 会把微应用挂载到下方主运行区，保留更大的可视空间。</p>
+      </div>
+      <div className="shell-page-card__status">
+        <span className="shell-page-card__status-label">加载状态</span>
+        <strong>{loading ? "加载中" : "已就绪"}</strong>
+      </div>
     </section>
   );
 }
 
 function RoomsHostPage({ loading }: { loading: boolean }) {
   return (
-    <section className="shell-page-card shell-page-card--compact">
-      <span className="shell-badge">Micro App Host</span>
-      <h1>样板间微应用容器</h1>
-      <p>当前路由进入 `/rooms` 后，qiankun 会把微应用挂载到右侧容器里。</p>
-      <p>加载状态：{loading ? "加载中" : "已就绪"}</p>
+    <section className="shell-page-card shell-page-card--micro-brief">
+      <div className="shell-page-card__intro">
+        <span className="shell-badge">Micro App Host</span>
+        <h1>样板间微应用容器</h1>
+        <p>当前路由进入 `/rooms` 后，qiankun 会把微应用挂载到下方主运行区，优先保证内容展示面积。</p>
+      </div>
+      <div className="shell-page-card__status">
+        <span className="shell-page-card__status-label">加载状态</span>
+        <strong>{loading ? "加载中" : "已就绪"}</strong>
+      </div>
     </section>
   );
 }
@@ -182,7 +192,7 @@ export default function App() {
 
   return (
     <div
-      className={`shell shell--theme-${platformState.themeMode} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
+      className={`shell shell--theme-${platformState.themeMode} ${isMicroAppRoute ? "shell--app-focus" : ""} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
     >
       <aside className="shell-sidebar">
         <div className="shell-sidebar__brand">
@@ -202,30 +212,36 @@ export default function App() {
         </div>
       </aside>
 
-      <div className="shell-main">
-        <header className="shell-header">
-          <div>
-            <p className="shell-header__eyebrow">Production-ready scaffold</p>
-            <h1>统一入口、统一契约、统一质量门禁</h1>
-          </div>
-          <div className="shell-header__actions">
-            <button className="shell-button shell-button--ghost" onClick={toggleTheme}>
-              切换主题
-            </button>
-            {session.authenticated ? (
-              <button className="shell-button" onClick={() => void handleLogout()}>
-                退出
+      <div className={`shell-main ${isMicroAppRoute ? "shell-main--micro-route" : ""}`}>
+        {!isMicroAppRoute ? (
+          <header className="shell-header">
+            <div>
+              <p className="shell-header__eyebrow">Production-ready scaffold</p>
+              <h1>统一入口、统一契约、统一质量门禁</h1>
+            </div>
+            <div className="shell-header__actions">
+              <button className="shell-button shell-button--ghost" onClick={toggleTheme}>
+                切换主题
               </button>
-            ) : (
-              <button className="shell-button" onClick={() => void handleLogin()}>
-                登录
-              </button>
-            )}
-          </div>
-        </header>
+              {session.authenticated ? (
+                <button className="shell-button" onClick={() => void handleLogout()}>
+                  退出
+                </button>
+              ) : (
+                <button className="shell-button" onClick={() => void handleLogin()}>
+                  登录
+                </button>
+              )}
+            </div>
+          </header>
+        ) : null}
 
-        <div className="shell-main__body">
-          <div className="shell-main__content">
+        <div
+          className={`shell-main__body ${isMicroAppRoute ? "shell-main__body--micro-route" : ""}`}
+        >
+          <div
+            className={`shell-main__content ${isMicroAppRoute ? "shell-main__content--micro-route" : ""}`}
+          >
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
@@ -258,7 +274,7 @@ export default function App() {
           </div>
 
           <section
-            className={`shell-micro-app-panel ${isMicroAppRoute ? "is-active" : "is-hidden"}`}
+            className={`shell-micro-app-panel ${isMicroAppRoute ? "is-active" : "is-hidden"} ${isMicroAppRoute ? "shell-micro-app-panel--micro-route" : ""}`}
             aria-hidden={!isMicroAppRoute}
           >
             {microAppFullscreen ? (
@@ -273,25 +289,16 @@ export default function App() {
                   ×
                 </span>
               </button>
-            ) : (
+            ) : !isMicroAppRoute ? (
               <div className="shell-micro-app-panel__header">
                 <strong>Micro App Runtime</strong>
                 <div className="shell-micro-app-panel__actions">
                   <span className="shell-micro-app-panel__status">
                     {microAppLoading ? "Loading" : "Mounted"}
                   </span>
-                  {isMicroAppRoute ? (
-                    <button
-                      className="shell-button shell-button--ghost shell-micro-app-panel__fullscreen"
-                      onClick={() => setMicroAppFullscreen(true)}
-                      type="button"
-                    >
-                      全屏
-                    </button>
-                  ) : null}
                 </div>
               </div>
-            )}
+            ) : null}
             <div id="micro-app-slot" className="shell-micro-app-panel__slot" />
           </section>
         </div>
