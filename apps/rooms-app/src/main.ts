@@ -1,8 +1,10 @@
 import { createApp, type App as VueApp } from "vue";
-import router from "./router";
+import Antd from "ant-design-vue";
 import App from "./App.vue";
 
 import "./public-path";
+import "ant-design-vue/dist/reset.css";
+import "./styles/index.css";
 
 type QiankunProps = {
   container?: HTMLElement;
@@ -19,7 +21,7 @@ function render(props?: QiankunProps): void {
   }
 
   app = createApp(App);
-  app.use(router);
+  app.use(Antd);
   app.mount(container);
 }
 

@@ -119,8 +119,10 @@ export default function App() {
   const [platformState, setPlatformState] =
     useState<PlatformGlobalState>(initialPlatformState);
   const [microAppLoading, setMicroAppLoading] = useState(false);
+  const [microAppFullscreen, setMicroAppFullscreen] = useState(false);
   const isOrdersRoute = location.pathname.startsWith("/orders");
   const isRoomsRoute = location.pathname.startsWith("/rooms");
+  const isMicroAppRoute = isOrdersRoute || isRoomsRoute;
 
   useEffect(() => {
     return authClient.subscribe(setSession);
@@ -156,6 +158,12 @@ export default function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!isMicroAppRoute) {
+      setMicroAppFullscreen(false);
+    }
+  }, [isMicroAppRoute]);
+
   async function handleLogin(): Promise<void> {
     await authClient.loginAsDemoUser();
     shellNavigation.replace("/");
@@ -173,7 +181,9 @@ export default function App() {
   }
 
   return (
-    <div className={`shell shell--theme-${platformState.themeMode}`}>
+    <div
+      className={`shell shell--theme-${platformState.themeMode} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
+    >
       <aside className="shell-sidebar">
         <div className="shell-sidebar__brand">
           <span className="shell-badge">qiankun</span>
@@ -248,13 +258,40 @@ export default function App() {
           </div>
 
           <section
-            className={`shell-micro-app-panel ${isOrdersRoute || isRoomsRoute ? "is-active" : "is-hidden"}`}
-            aria-hidden={!isOrdersRoute && !isRoomsRoute}
+            className={`shell-micro-app-panel ${isMicroAppRoute ? "is-active" : "is-hidden"}`}
+            aria-hidden={!isMicroAppRoute}
           >
-            <div className="shell-micro-app-panel__header">
-              <strong>Micro App Runtime</strong>
-              <span>{microAppLoading ? "Loading" : "Mounted"}</span>
-            </div>
+            {microAppFullscreen ? (
+              <button
+                className="shell-micro-app-panel__floating-close"
+                onClick={() => setMicroAppFullscreen(false)}
+                type="button"
+                aria-label="退出全屏"
+                title="退出全屏"
+              >
+                <span className="shell-micro-app-panel__floating-close-icon" aria-hidden="true">
+                  ×
+                </span>
+              </button>
+            ) : (
+              <div className="shell-micro-app-panel__header">
+                <strong>Micro App Runtime</strong>
+                <div className="shell-micro-app-panel__actions">
+                  <span className="shell-micro-app-panel__status">
+                    {microAppLoading ? "Loading" : "Mounted"}
+                  </span>
+                  {isMicroAppRoute ? (
+                    <button
+                      className="shell-button shell-button--ghost shell-micro-app-panel__fullscreen"
+                      onClick={() => setMicroAppFullscreen(true)}
+                      type="button"
+                    >
+                      全屏
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            )}
             <div id="micro-app-slot" className="shell-micro-app-panel__slot" />
           </section>
         </div>
