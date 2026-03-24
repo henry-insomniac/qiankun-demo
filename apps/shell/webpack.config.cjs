@@ -10,8 +10,28 @@ const workspaceSources = [
   path.resolve(__dirname, "../../packages/shared-utils/src"),
 ];
 
+function normalizePublicBasePath(basePath = "/") {
+  if (!basePath || basePath === "/") {
+    return "/";
+  }
+
+  return `/${basePath.replace(/^\/+|\/+$/g, "")}/`;
+}
+
+function normalizeShellBasePath(basePath = "") {
+  if (!basePath || basePath === "/") {
+    return "";
+  }
+
+  return `/${basePath.replace(/^\/+|\/+$/g, "")}`;
+}
+
 module.exports = (_, argv) => {
   const isProduction = argv.mode === "production";
+  const publicBasePath = normalizePublicBasePath(process.env.PUBLIC_BASE_PATH || "/");
+  const shellBasePath = normalizeShellBasePath(
+    process.env.SHELL_BASE_PATH || publicBasePath,
+  );
 
   return {
     mode: isProduction ? "production" : "development",
@@ -25,7 +45,7 @@ module.exports = (_, argv) => {
       chunkFilename: isProduction
         ? "static/js/[name].[contenthash:8].chunk.js"
         : "static/js/[name].chunk.js",
-      publicPath: "/",
+      publicPath: publicBasePath,
       clean: true,
     },
     resolve: {
@@ -58,6 +78,7 @@ module.exports = (_, argv) => {
         template: path.resolve(__dirname, "public/index.html"),
       }),
       new webpack.DefinePlugin({
+        __SHELL_BASE_PATH__: JSON.stringify(shellBasePath),
         __ORDERS_APP_ENTRY__: JSON.stringify(
           process.env.ORDERS_APP_ENTRY || "http://localhost:7101",
         ),
@@ -77,4 +98,3 @@ module.exports = (_, argv) => {
     stats: "minimal",
   };
 };
-

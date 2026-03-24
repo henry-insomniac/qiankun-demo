@@ -21,12 +21,27 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm build:pages
 ```
 
 ## Ports
 
 - shell: `http://localhost:7100`
 - orders micro app: `http://localhost:7101`
+- rooms micro app: `http://localhost:7102`
+
+## GitHub Pages
+
+- Workflow: `.github/workflows/pages.yml`
+- Trigger: push to `develop` or manual `workflow_dispatch`
+- Build output: `dist-pages/`
+- Default public URL pattern: `https://<user>.github.io/qiankun-demo/`
+
+本仓库的 Pages 部署保留 pathname 路由，并通过 `404.html + sessionStorage` 做单页应用回跳。
+Shell 发布在仓库根路径下，微应用 entry 发布在：
+
+- `/qiankun-demo/apps/orders/`
+- `/qiankun-demo/apps/rooms/`
 
 ## External Onboarding Assets
 
