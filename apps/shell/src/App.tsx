@@ -78,6 +78,17 @@ function OrdersHostPage({ loading }: { loading: boolean }) {
   );
 }
 
+function RoomsHostPage({ loading }: { loading: boolean }) {
+  return (
+    <section className="shell-page-card shell-page-card--compact">
+      <span className="shell-badge">Micro App Host</span>
+      <h1>样板间微应用容器</h1>
+      <p>当前路由进入 `/rooms` 后，qiankun 会把微应用挂载到右侧容器里。</p>
+      <p>加载状态：{loading ? "加载中" : "已就绪"}</p>
+    </section>
+  );
+}
+
 function NotFoundPage() {
   return (
     <section className="shell-page-card shell-page-card--compact">
@@ -108,7 +119,10 @@ export default function App() {
   const [platformState, setPlatformState] =
     useState<PlatformGlobalState>(initialPlatformState);
   const [microAppLoading, setMicroAppLoading] = useState(false);
+  const [microAppFullscreen, setMicroAppFullscreen] = useState(false);
   const isOrdersRoute = location.pathname.startsWith("/orders");
+  const isRoomsRoute = location.pathname.startsWith("/rooms");
+  const isMicroAppRoute = isOrdersRoute || isRoomsRoute;
 
   useEffect(() => {
     return authClient.subscribe(setSession);
@@ -144,6 +158,12 @@ export default function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (!isMicroAppRoute) {
+      setMicroAppFullscreen(false);
+    }
+  }, [isMicroAppRoute]);
+
   async function handleLogin(): Promise<void> {
     await authClient.loginAsDemoUser();
     shellNavigation.replace("/");
@@ -161,7 +181,9 @@ export default function App() {
   }
 
   return (
-    <div className={`shell shell--theme-${platformState.themeMode}`}>
+    <div
+      className={`shell shell--theme-${platformState.themeMode} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
+    >
       <aside className="shell-sidebar">
         <div className="shell-sidebar__brand">
           <span className="shell-badge">qiankun</span>
@@ -170,6 +192,7 @@ export default function App() {
         <nav className="shell-sidebar__nav">
           <NavLink to="/">总览</NavLink>
           <NavLink to="/orders">订单系统</NavLink>
+          <NavLink to="/rooms">样板间</NavLink>
           <NavLink to="/profile">个人中心</NavLink>
         </nav>
         <div className="shell-sidebar__meta">
@@ -222,18 +245,53 @@ export default function App() {
                   </RequireAuth>
                 }
               />
+              <Route
+                path="/rooms/*"
+                element={
+                  <RequireAuth authenticated={session.authenticated}>
+                    <RoomsHostPage loading={microAppLoading} />
+                  </RequireAuth>
+                }
+              />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </div>
 
           <section
-            className={`shell-micro-app-panel ${isOrdersRoute ? "is-active" : "is-hidden"}`}
-            aria-hidden={!isOrdersRoute}
+            className={`shell-micro-app-panel ${isMicroAppRoute ? "is-active" : "is-hidden"}`}
+            aria-hidden={!isMicroAppRoute}
           >
-            <div className="shell-micro-app-panel__header">
-              <strong>Micro App Runtime</strong>
-              <span>{microAppLoading ? "Loading" : "Mounted"}</span>
-            </div>
+            {microAppFullscreen ? (
+              <button
+                className="shell-micro-app-panel__floating-close"
+                onClick={() => setMicroAppFullscreen(false)}
+                type="button"
+                aria-label="退出全屏"
+                title="退出全屏"
+              >
+                <span className="shell-micro-app-panel__floating-close-icon" aria-hidden="true">
+                  ×
+                </span>
+              </button>
+            ) : (
+              <div className="shell-micro-app-panel__header">
+                <strong>Micro App Runtime</strong>
+                <div className="shell-micro-app-panel__actions">
+                  <span className="shell-micro-app-panel__status">
+                    {microAppLoading ? "Loading" : "Mounted"}
+                  </span>
+                  {isMicroAppRoute ? (
+                    <button
+                      className="shell-button shell-button--ghost shell-micro-app-panel__fullscreen"
+                      onClick={() => setMicroAppFullscreen(true)}
+                      type="button"
+                    >
+                      全屏
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            )}
             <div id="micro-app-slot" className="shell-micro-app-panel__slot" />
           </section>
         </div>

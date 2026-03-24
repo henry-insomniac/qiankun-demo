@@ -1,7 +1,13 @@
 .shell {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
   grid-template-columns: 280px 1fr;
+  overflow: hidden;
+  --shell-scrollbar-thumb: rgba(15, 23, 42, 0.22);
+  --shell-scrollbar-thumb-hover: rgba(15, 23, 42, 0.32);
+  --shell-scrollbar-track: transparent;
+  --shell-floating-close-bg: rgba(255, 253, 249, 0.82);
+  --shell-floating-close-bg-hover: rgba(255, 253, 249, 0.92);
 }
 
 .shell--theme-dark {
@@ -13,6 +19,11 @@
   --color-border: #5c4a36;
   --color-accent: #ff975c;
   --color-accent-strong: #ffb17e;
+  --shell-scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --shell-scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
+  --shell-scrollbar-track: transparent;
+  --shell-floating-close-bg: rgba(39, 33, 26, 0.78);
+  --shell-floating-close-bg-hover: rgba(39, 33, 26, 0.92);
 }
 
 .shell-sidebar {
@@ -23,8 +34,41 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  overflow: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--shell-scrollbar-thumb) var(--shell-scrollbar-track);
 }
 
+.shell-main__content {
+  scrollbar-width: thin;
+  scrollbar-color: var(--shell-scrollbar-thumb) var(--shell-scrollbar-track);
+}
+
+.shell-sidebar::-webkit-scrollbar,
+.shell-main__content::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.shell-sidebar::-webkit-scrollbar-track,
+.shell-main__content::-webkit-scrollbar-track {
+  background: var(--shell-scrollbar-track);
+}
+
+.shell-sidebar::-webkit-scrollbar-thumb,
+.shell-main__content::-webkit-scrollbar-thumb {
+  background: var(--shell-scrollbar-thumb);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.shell-sidebar::-webkit-scrollbar-thumb:hover,
+.shell-main__content::-webkit-scrollbar-thumb:hover {
+  background: var(--shell-scrollbar-thumb-hover);
+  background-clip: content-box;
+}
 .shell-sidebar__brand {
   display: grid;
   gap: 8px;
@@ -60,7 +104,10 @@
 .shell-main {
   padding: 28px;
   display: grid;
+  grid-template-rows: auto 1fr;
   gap: 24px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .shell-header {
@@ -92,10 +139,13 @@
   display: grid;
   grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
   gap: 20px;
+  min-height: 0;
 }
 
 .shell-main__content {
   min-width: 0;
+  overflow: auto;
+  min-height: 0;
 }
 
 .shell-page-card {
@@ -166,6 +216,10 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
 }
 
 .shell-micro-app-panel.is-hidden {
@@ -177,11 +231,95 @@
   border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background: var(--color-surface-strong);
 }
 
+.shell-micro-app-panel__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.shell-micro-app-panel__status {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.shell-micro-app-panel__fullscreen {
+  padding: 8px 12px;
+}
+
 .shell-micro-app-panel__slot {
-  min-height: 620px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.shell-micro-app-panel__slot > * {
+  height: 100%;
+  min-height: 0;
+}
+
+.shell-micro-app-panel__slot #app {
+  height: 100%;
+  min-height: 0;
+}
+
+.shell-micro-app-panel__floating-close {
+  position: fixed;
+  top: 12px;
+  right: 18px;
+  z-index: 50;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--shell-floating-close-bg);
+  backdrop-filter: blur(10px);
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shell-micro-app-panel__floating-close:hover {
+  background: var(--shell-floating-close-bg-hover);
+}
+
+.shell-micro-app-panel__floating-close-icon {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+/* Fullscreen micro-app: shell frame fixed, content-only display */
+.shell.shell--micro-fullscreen {
+  grid-template-columns: 1fr;
+}
+
+.shell.shell--micro-fullscreen .shell-sidebar,
+.shell.shell--micro-fullscreen .shell-header,
+.shell.shell--micro-fullscreen .shell-main__content {
+  display: none;
+}
+
+.shell.shell--micro-fullscreen .shell-main {
+  padding: 0;
+  gap: 0;
+}
+
+.shell.shell--micro-fullscreen .shell-main__body {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.shell.shell--micro-fullscreen .shell-micro-app-panel {
+  border-radius: 0;
+  border: none;
 }
 
 @media (max-width: 1100px) {

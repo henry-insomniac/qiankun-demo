@@ -1,0 +1,25 @@
+{
+  "name": "@qiankun-demo/rooms-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "webpack serve --config webpack.config.cjs --mode development",
+    "build": "webpack --config webpack.config.cjs --mode production",
+    "typecheck": "vue-tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "ant-design-vue": "^4.2.6",
+    "ant-design-x-vue": "^1.6.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.2",
+    "vue-loader": "^17.4.2",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}

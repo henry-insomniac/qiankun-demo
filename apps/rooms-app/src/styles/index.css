@@ -1,0 +1,168 @@
+/* rooms-app global baseline (incremental, minimal). */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Make Ant Design primary reflect current style accent */
+#rooms-app .ant-btn-primary {
+  background: var(--rooms-accent);
+  border-color: var(--rooms-accent);
+}
+
+#rooms-app .ant-btn-primary:not(:disabled):hover {
+  filter: brightness(1.03);
+}
+
+/* Theme tokens scoped to rooms-app */
+#rooms-app {
+  --rooms-header-height: 64px;
+  --rooms-bg: #f6f7fb;
+  --rooms-header-bg: #ffffff;
+  --rooms-fg: rgba(0, 0, 0, 0.88);
+  --rooms-border: rgba(0, 0, 0, 0.12);
+  --rooms-muted: rgba(0, 0, 0, 0.56);
+  --rooms-surface: #ffffff;
+  --rooms-surface-2: #fbfbfd;
+  --rooms-accent: #1677ff;
+  --rooms-accent-soft: rgba(22, 119, 255, 0.12);
+  --rooms-secondary: #7c3aed;
+  --rooms-secondary-soft: rgba(124, 58, 237, 0.12);
+  --rooms-success: #16a34a;
+  --rooms-warning: #f59e0b;
+  --rooms-danger: #ef4444;
+  --rooms-scrollbar-thumb: rgba(15, 23, 42, 0.22);
+  --rooms-scrollbar-thumb-hover: rgba(15, 23, 42, 0.32);
+  --rooms-scrollbar-track: transparent;
+  color-scheme: light;
+}
+
+#rooms-app.rooms-theme-dark {
+  --rooms-bg: #0f1115;
+  --rooms-header-bg: #171a22;
+  --rooms-fg: rgba(255, 255, 255, 0.88);
+  --rooms-border: rgba(255, 255, 255, 0.18);
+  --rooms-muted: rgba(255, 255, 255, 0.68);
+  --rooms-surface: #12151d;
+  --rooms-surface-2: #141826;
+  --rooms-accent: #4c9aff;
+  --rooms-accent-soft: rgba(76, 154, 255, 0.16);
+  --rooms-secondary: #a78bfa;
+  --rooms-secondary-soft: rgba(167, 139, 250, 0.16);
+  --rooms-success: #34d399;
+  --rooms-warning: #fbbf24;
+  --rooms-danger: #fb7185;
+  --rooms-scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --rooms-scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
+  --rooms-scrollbar-track: transparent;
+  color-scheme: dark;
+}
+
+/* Scrollbar theming (only on scroll containers) */
+#rooms-app .rooms-content,
+#rooms-app .ax-demo-sider {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rooms-scrollbar-thumb) var(--rooms-scrollbar-track);
+}
+
+#rooms-app .rooms-content::-webkit-scrollbar,
+#rooms-app .ax-demo-sider::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+#rooms-app .rooms-content::-webkit-scrollbar-track,
+#rooms-app .ax-demo-sider::-webkit-scrollbar-track {
+  background: var(--rooms-scrollbar-track);
+}
+
+#rooms-app .rooms-content::-webkit-scrollbar-thumb,
+#rooms-app .ax-demo-sider::-webkit-scrollbar-thumb {
+  background: var(--rooms-scrollbar-thumb);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+#rooms-app .rooms-content::-webkit-scrollbar-thumb:hover,
+#rooms-app .ax-demo-sider::-webkit-scrollbar-thumb:hover {
+  background: var(--rooms-scrollbar-thumb-hover);
+  background-clip: content-box;
+}
+
+/* 风格1：默认清爽（现有蓝系，偏“蓝图/平台”） */
+#rooms-app.rooms-style-1 {
+  --rooms-accent: #1677ff;
+  --rooms-accent-soft: rgba(22, 119, 255, 0.12);
+  --rooms-secondary: #7c3aed;
+  --rooms-secondary-soft: rgba(124, 58, 237, 0.12);
+}
+
+#rooms-app.rooms-theme-dark.rooms-style-1 {
+  --rooms-accent: #4c9aff;
+  --rooms-accent-soft: rgba(76, 154, 255, 0.16);
+  --rooms-secondary: #a78bfa;
+  --rooms-secondary-soft: rgba(167, 139, 250, 0.16);
+}
+
+/* 风格2：蓝图工程感（更偏 cyan/blueprint，简约清爽） */
+#rooms-app.rooms-style-2 {
+  --rooms-bg: #f3f8ff;
+  --rooms-header-bg: #ffffff;
+  --rooms-surface: #ffffff;
+  --rooms-surface-2: #f8fbff;
+  --rooms-border: rgba(15, 23, 42, 0.12);
+  --rooms-accent: #0891b2; /* cyan-600 */
+  --rooms-accent-soft: rgba(8, 145, 178, 0.14);
+  --rooms-secondary: #2563eb; /* blueprint blue */
+  --rooms-secondary-soft: rgba(37, 99, 235, 0.12);
+}
+
+#rooms-app.rooms-theme-dark.rooms-style-2 {
+  --rooms-bg: #0b1220; /* blueprint night */
+  --rooms-header-bg: #0f1a2e;
+  --rooms-surface: #0f1a2e;
+  --rooms-surface-2: #0b1220;
+  --rooms-border: rgba(148, 163, 184, 0.18);
+  --rooms-accent: #22d3ee; /* cyan-400 */
+  --rooms-accent-soft: rgba(34, 211, 238, 0.18);
+  --rooms-secondary: #60a5fa;
+  --rooms-secondary-soft: rgba(96, 165, 250, 0.16);
+}
+
+/* 风格3：建筑施工感（更偏“安全绿/信号黄”，但保持克制） */
+#rooms-app.rooms-style-3 {
+  --rooms-bg: #f6fbf7;
+  --rooms-header-bg: #ffffff;
+  --rooms-surface: #ffffff;
+  --rooms-surface-2: #fbfdfb;
+  --rooms-border: rgba(20, 83, 45, 0.14);
+  --rooms-accent: #16a34a; /* green-600 */
+  --rooms-accent-soft: rgba(22, 163, 74, 0.14);
+  --rooms-secondary: #f59e0b; /* amber-500 */
+  --rooms-secondary-soft: rgba(245, 158, 11, 0.14);
+}
+
+#rooms-app.rooms-theme-dark.rooms-style-3 {
+  --rooms-bg: #08130d;
+  --rooms-header-bg: #0c1f15;
+  --rooms-surface: #0c1f15;
+  --rooms-surface-2: #08130d;
+  --rooms-border: rgba(134, 239, 172, 0.18);
+  --rooms-accent: #34d399; /* emerald-400 */
+  --rooms-accent-soft: rgba(52, 211, 153, 0.18);
+  --rooms-secondary: #fbbf24;
+  --rooms-secondary-soft: rgba(251, 191, 36, 0.18);
+}
+

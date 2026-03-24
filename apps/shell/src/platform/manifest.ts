@@ -3,6 +3,8 @@ import {
   type MicroAppManifest,
 } from "@qiankun-demo/contracts";
 
+declare const __ROOMS_APP_ENTRY__: string;
+
 export const microAppManifests: MicroAppManifest[] = [
   {
     name: "orders-app",
@@ -14,7 +16,19 @@ export const microAppManifests: MicroAppManifest[] = [
     ownerTeam: "platform",
     version: "0.1.0",
     standaloneUrl: __ORDERS_APP_ENTRY__,
-    critical: true,
+    critical: false,
+  },
+  {
+    name: "rooms-app",
+    domain: "rooms",
+    entry: __ROOMS_APP_ENTRY__,
+    activeRule: "/rooms",
+    mountContainer: "#micro-app-slot",
+    routeBase: "/rooms",
+    ownerTeam: "platform",
+    version: "0.1.0",
+    standaloneUrl: __ROOMS_APP_ENTRY__,
+    critical: false,
   },
 ];
 
