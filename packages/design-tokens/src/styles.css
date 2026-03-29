@@ -1,17 +1,17 @@
 :root {
-  --color-background: #f4f1eb;
-  --color-surface: #fffdf9;
-  --color-surface-strong: #fff7ea;
-  --color-text: #201910;
-  --color-text-muted: #665a4a;
-  --color-border: #dbcab6;
-  --color-accent: #c65d1f;
-  --color-accent-strong: #9f4310;
+  --color-background: #f0f7ff;
+  --color-surface: #ffffff;
+  --color-surface-strong: #f0f9ff;
+  --color-text: #1e3a5f;
+  --color-text-muted: #3b82f6;
+  --color-border: #bfdbfe;
+  --color-accent: #2563eb;
+  --color-accent-strong: #1d4ed8;
   --color-success: #2e7d59;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 24px;
-  --shadow-card: 0 14px 32px rgba(85, 56, 22, 0.08);
+  --shadow-card: 0 14px 32px rgba(37, 99, 235, 0.08);
   --font-sans: "IBM Plex Sans", "Noto Sans SC", sans-serif;
 }
 
@@ -28,9 +28,7 @@ body,
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background:
-    radial-gradient(circle at top left, rgba(198, 93, 31, 0.16), transparent 32%),
-    linear-gradient(180deg, #f9f5ee 0%, var(--color-background) 100%);
+  background-color: var(--bg-color, var(--background));
   color: var(--color-text);
 }
 

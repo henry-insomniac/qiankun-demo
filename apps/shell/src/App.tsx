@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useTheme } from "next-themes";
 
 import { createMockAuthClient } from "@qiankun-demo/auth-sdk";
 import type { PlatformGlobalState } from "@qiankun-demo/contracts";
 import { TOKENS_VERSION } from "@qiankun-demo/design-tokens";
+import { THEMES } from "./lib/theme";
 
 import { bootstrapQiankun } from "./platform/bootstrapQiankun";
 import {
@@ -123,13 +125,67 @@ function RequireAuth({
   return children;
 }
 
+interface ThemePanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onThemeSelect: (themeId: string, x: number, y: number) => void;
+}
+
+function ThemePanel({ isOpen, onClose, onThemeSelect }: ThemePanelProps) {
+  const { theme } = useTheme();
+
+  if (!isOpen) return null;
+
+  function handleThemeSelect(themeId: string) {
+    onThemeSelect(themeId);
+    onClose();
+  }
+
+  return (
+    <>
+      <div className="theme-panel__backdrop" onClick={onClose} />
+      <div className="theme-panel">
+        <div className="theme-panel__header">
+          <h3>选择主题</h3>
+          <button className="theme-panel__close" onClick={onClose} type="button">
+            ×
+          </button>
+        </div>
+        <p className="theme-panel__desc">选择您喜爱的配色方案，适配不同工作心情</p>
+        <div className="theme-panel__grid">
+          {THEMES.map((item) => (
+            <button
+              key={item.id}
+              className={`theme-panel__item ${theme === item.id ? "is-active" : ""}`}
+              onClick={() => handleThemeSelect(item.id)}
+              type="button"
+            >
+              <div
+                className="theme-panel__color"
+                style={{ backgroundColor: item.color }}
+              />
+              <span className="theme-panel__name">{item.name}</span>
+              {theme === item.id && (
+                <span className="theme-panel__check">✓</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function App() {
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
   const [session, setSession] = useState(authClient.getSession());
   const [platformState, setPlatformState] =
     useState<PlatformGlobalState>(initialPlatformState);
   const [microAppLoading, setMicroAppLoading] = useState(false);
   const [microAppFullscreen, setMicroAppFullscreen] = useState(false);
+  const [themePanelOpen, setThemePanelOpen] = useState(false);
+  const [themeRipple, setThemeRipple] = useState<{ x: number; y: number; color: string } | null>(null);
   const isOrdersRoute = location.pathname.startsWith("/orders");
   const isRoomsRoute = location.pathname.startsWith("/rooms");
   const isMicroAppRoute = isOrdersRoute || isRoomsRoute;
@@ -184,15 +240,25 @@ export default function App() {
     shellNavigation.replace("/login");
   }
 
-  function toggleTheme(): void {
-    shellSharedState.setGlobalState?.({
-      themeMode: platformState.themeMode === "light" ? "dark" : "light",
-    });
+  const currentThemeName = THEMES.find((t) => t.id === theme)?.name || theme;
+
+  function handleThemeSelectWithRipple(themeId: string) {
+    const selectedTheme = THEMES.find((t) => t.id === themeId);
+    const color = selectedTheme?.color || "#2563eb";
+    setThemeRipple({ x: window.innerWidth / 2, y: window.innerHeight / 2, color });
+    setTimeout(() => {
+      setThemeRipple(null);
+      setTheme(themeId);
+    }, 400);
   }
 
   return (
     <div
-      className={`shell shell--theme-${platformState.themeMode} ${isMicroAppRoute ? "shell--app-focus" : ""} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
+<<<<<<< Updated upstream
+      className={`shell shell--theme-${theme} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
+=======
+      className={`shell shell--theme-${theme} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
+>>>>>>> Stashed changes
     >
       <aside className="shell-sidebar">
         <div className="shell-sidebar__brand">
@@ -212,29 +278,31 @@ export default function App() {
         </div>
       </aside>
 
-      <div className={`shell-main ${isMicroAppRoute ? "shell-main--micro-route" : ""}`}>
-        {!isMicroAppRoute ? (
-          <header className="shell-header">
-            <div>
-              <p className="shell-header__eyebrow">Production-ready scaffold</p>
-              <h1>统一入口、统一契约、统一质量门禁</h1>
-            </div>
-            <div className="shell-header__actions">
-              <button className="shell-button shell-button--ghost" onClick={toggleTheme}>
-                切换主题
+<<<<<<< Updated upstream
+      <div className="shell-main">
+        <header className="shell-header">
+          <div>
+            <p className="shell-header__eyebrow">Production-ready scaffold</p>
+            <h1>统一入口、统一契约、统一质量门禁</h1>
+          </div>
+          <div className="shell-header__actions">
+            <button
+              className="shell-button shell-button--ghost"
+              onClick={() => setThemePanelOpen(true)}
+            >
+              主题: {currentThemeName}
+            </button>
+            {session.authenticated ? (
+              <button className="shell-button" onClick={() => void handleLogout()}>
+                退出
               </button>
-              {session.authenticated ? (
-                <button className="shell-button" onClick={() => void handleLogout()}>
-                  退出
-                </button>
-              ) : (
-                <button className="shell-button" onClick={() => void handleLogin()}>
-                  登录
-                </button>
-              )}
-            </div>
-          </header>
-        ) : null}
+            ) : (
+              <button className="shell-button" onClick={() => void handleLogin()}>
+                登录
+              </button>
+            )}
+          </div>
+        </header>
 
         <div
           className={`shell-main__body ${isMicroAppRoute ? "shell-main__body--micro-route" : ""}`}
@@ -303,6 +371,22 @@ export default function App() {
           </section>
         </div>
       </div>
+
+      <ThemePanel
+        isOpen={themePanelOpen}
+        onClose={() => setThemePanelOpen(false)}
+        onThemeSelect={handleThemeSelectWithRipple}
+      />
+      {themeRipple && (
+        <div
+          className="theme-ripple"
+          style={{
+            left: themeRipple.x,
+            top: themeRipple.y,
+            backgroundColor: themeRipple.color,
+          }}
+        />
+      )}
     </div>
   );
 }

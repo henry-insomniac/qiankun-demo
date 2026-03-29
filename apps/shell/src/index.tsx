@@ -4,6 +4,9 @@ import { BrowserRouter } from "react-router-dom";
 
 import "@qiankun-demo/design-tokens/styles.css";
 
+import { ThemeProvider } from "next-themes";
+import { themeIds, DEFAULT_THEME } from "./lib/theme";
+
 import App from "./App";
 import { shellBasePath } from "./platform/basePath";
 import "./styles.css";
@@ -16,14 +19,22 @@ if (!rootContainer) {
 
 createRoot(rootContainer).render(
   <StrictMode>
-    <BrowserRouter
-      basename={shellBasePath || undefined}
-      future={{
-        v7_relativeSplatPath: true,
-        v7_startTransition: true,
-      }}
+    <ThemeProvider
+      attribute="data-theme"
+      defaultTheme={DEFAULT_THEME}
+      themes={themeIds}
+      enableSystem={false}
+      disableTransitionOnChange
     >
-      <App />
-    </BrowserRouter>
+      <BrowserRouter
+        basename={shellBasePath || undefined}
+        future={{
+          v7_relativeSplatPath: true,
+          v7_startTransition: true,
+        }}
+      >
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </StrictMode>,
 );
