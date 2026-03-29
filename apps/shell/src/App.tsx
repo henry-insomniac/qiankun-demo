@@ -254,11 +254,7 @@ export default function App() {
 
   return (
     <div
-<<<<<<< Updated upstream
       className={`shell shell--theme-${theme} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
-=======
-      className={`shell shell--theme-${theme} ${microAppFullscreen ? "shell--micro-fullscreen" : ""}`}
->>>>>>> Stashed changes
     >
       <aside className="shell-sidebar">
         <div className="shell-sidebar__brand">
@@ -278,7 +274,6 @@ export default function App() {
         </div>
       </aside>
 
-<<<<<<< Updated upstream
       <div className="shell-main">
         <header className="shell-header">
           <div>
