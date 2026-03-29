@@ -13,10 +13,10 @@
     "@qiankun-demo/contracts": "workspace:*",
     "@qiankun-demo/design-tokens": "workspace:*",
     "@qiankun-demo/shared-utils": "workspace:*",
+    "next-themes": "^0.4.6",
     "qiankun": "2.10.16",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.1"
   }
 }
-

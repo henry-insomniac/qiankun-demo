@@ -9,6 +9,7 @@
     "dev:orders": "pnpm --filter @qiankun-demo/orders-app dev",
     "dev:rooms": "pnpm --filter @qiankun-demo/rooms-app dev",
     "build": "pnpm --filter @qiankun-demo/shell build && pnpm --filter @qiankun-demo/orders-app build && pnpm --filter @qiankun-demo/rooms-app build",
+    "build:pages": "node ./scripts/build-pages.mjs",
     "lint": "eslint .",
     "typecheck": "pnpm -r run typecheck",
     "test": "vitest run",
@@ -39,4 +40,3 @@
     "webpack-dev-server": "^5.2.2"
   }
 }
-

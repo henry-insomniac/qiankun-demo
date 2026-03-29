@@ -8,22 +8,346 @@
   --shell-scrollbar-track: transparent;
   --shell-floating-close-bg: rgba(255, 253, 249, 0.82);
   --shell-floating-close-bg-hover: rgba(255, 253, 249, 0.92);
+  background-color: transparent;
 }
 
+/* ========================
+   Theme Variables (shared across all themes)
+   ======================== */
+:root,
+[data-theme] {
+  --bg-color: var(--background);
+  --bg-gradient-1: var(--background);
+  --bg-gradient-2: var(--background);
+  --bg-gradient-3: var(--background);
+}
+
+/* ========================
+   Theme: tech (企业蓝 - Default)
+   ======================== */
+:root[data-theme="tech"],
+.shell--theme-tech {
+  --background: #f0f7ff;
+  --background-rgb: 240 247 255;
+  --primary: #2563eb;
+  --primary-rgb: 37 99 235;
+  --bg-color: #f0f7ff;
+  --bg-gradient-1: #bfdbfe;
+  --bg-gradient-1-rgb: 191 219 254;
+  --bg-gradient-2: #cffafe;
+  --bg-gradient-2-rgb: 207 250 254;
+  --bg-gradient-3: #ffffff;
+  --bg-gradient-3-rgb: 255 255 255;
+  --color-surface: #ffffff;
+  --color-surface-strong: #f0f9ff;
+  --color-text: #1e3a5f;
+  --color-text-muted: #3b82f6;
+  --color-border: #bfdbfe;
+  --color-accent: #2563eb;
+  --color-accent-strong: #1d4ed8;
+}
+
+/* ========================
+   Theme: dark (极夜黑)
+   ======================== */
+:root[data-theme="dark"],
 .shell--theme-dark {
-  --color-background: #1b1712;
-  --color-surface: #27211a;
-  --color-surface-strong: #33281d;
-  --color-text: #f8eee3;
-  --color-text-muted: #d0bfaa;
-  --color-border: #5c4a36;
-  --color-accent: #ff975c;
-  --color-accent-strong: #ffb17e;
-  --shell-scrollbar-thumb: rgba(255, 255, 255, 0.18);
-  --shell-scrollbar-thumb-hover: rgba(255, 255, 255, 0.28);
-  --shell-scrollbar-track: transparent;
-  --shell-floating-close-bg: rgba(39, 33, 26, 0.78);
-  --shell-floating-close-bg-hover: rgba(39, 33, 26, 0.92);
+  --background: #09090b;
+  --background-rgb: 9 9 11;
+  --primary: #ffffff;
+  --primary-rgb: 255 255 255;
+  --surface-rgb: 17 17 19;
+  --bg-color: #09090b;
+  --bg-gradient-1: #18181b;
+  --bg-gradient-1-rgb: 24 24 27;
+  --bg-gradient-2: #09090b;
+  --bg-gradient-2-rgb: 9 9 11;
+  --bg-gradient-3: #000000;
+  --bg-gradient-3-rgb: 0 0 0;
+  --color-surface: #18181b;
+  --color-surface-strong: #27272a;
+  --color-text: #ffffff;
+  --color-text-muted: #d1d5db;
+  --color-border: #3f3f46;
+  --color-accent: #ffffff;
+  --color-accent-strong: #e5e7eb;
+}
+
+/* ========================
+   Theme: dark-one (深邃黑)
+   ======================== */
+:root[data-theme="dark-one"],
+.shell--theme-dark-one {
+  --background: #1b1e23;
+  --background-rgb: 27 30 35;
+  --primary: #61afef;
+  --primary-rgb: 97 175 239;
+  --surface-rgb: 33 37 43;
+  --bg-color: #1b1e23;
+  --bg-gradient-1: #282c34;
+  --bg-gradient-1-rgb: 40 44 52;
+  --bg-gradient-2: #21252b;
+  --bg-gradient-2-rgb: 33 37 43;
+  --bg-gradient-3: #1b1e23;
+  --bg-gradient-3-rgb: 27 30 35;
+  --color-surface: #282c34;
+  --color-surface-strong: #333740;
+  --color-text: #ffffff;
+  --color-text-muted: #98c379;
+  --color-border: #4b5563;
+  --color-accent: #61afef;
+  --color-accent-strong: #7ec8ff;
+}
+
+/* ========================
+   Theme: business (事务金)
+   ======================== */
+:root[data-theme="business"],
+.shell--theme-business {
+  --background: #fffaf0;
+  --background-rgb: 255 250 240;
+  --primary: #c28100;
+  --primary-rgb: 194 129 0;
+  --bg-color: #fffaf0;
+  --bg-gradient-1: #fef3c7;
+  --bg-gradient-1-rgb: 254 243 199;
+  --bg-gradient-2: #ffedd5;
+  --bg-gradient-2-rgb: 255 237 213;
+  --bg-gradient-3: #ffffff;
+  --bg-gradient-3-rgb: 255 255 255;
+  --color-surface: #fffbeb;
+  --color-surface-strong: #fef3c7;
+  --color-text: #78350f;
+  --color-text-muted: #b45309;
+  --color-border: #fcd34d;
+  --color-accent: #c28100;
+  --color-accent-strong: #a16207;
+}
+
+/* ========================
+   Theme: mint (薄荷绿)
+   ======================== */
+:root[data-theme="mint"],
+.shell--theme-mint {
+  --background: #f0fdf4;
+  --background-rgb: 240 253 244;
+  --primary: #059669;
+  --primary-rgb: 5 150 105;
+  --bg-color: #f0fdf4;
+  --bg-gradient-1: #d1fae5;
+  --bg-gradient-1-rgb: 209 250 229;
+  --bg-gradient-2: #ccfbf1;
+  --bg-gradient-2-rgb: 204 251 241;
+  --bg-gradient-3: #ffffff;
+  --bg-gradient-3-rgb: 255 255 255;
+  --color-surface: #ecfdf5;
+  --color-surface-strong: #d1fae5;
+  --color-text: #064e3b;
+  --color-text-muted: #059669;
+  --color-border: #6ee7b7;
+  --color-accent: #059669;
+  --color-accent-strong: #047857;
+}
+
+/* ========================
+   Theme: sunset (晚霞橙)
+   ======================== */
+:root[data-theme="sunset"],
+.shell--theme-sunset {
+  --background: #fff7ed;
+  --background-rgb: 255 247 237;
+  --primary: #ea580c;
+  --primary-rgb: 234 88 12;
+  --bg-color: #fff7ed;
+  --bg-gradient-1: #ffedd5;
+  --bg-gradient-1-rgb: 255 237 213;
+  --bg-gradient-2: #fee2e2;
+  --bg-gradient-2-rgb: 254 226 226;
+  --bg-gradient-3: #ffffff;
+  --bg-gradient-3-rgb: 255 255 255;
+  --color-surface: #fff7ed;
+  --color-surface-strong: #ffedd5;
+  --color-text: #7c2d12;
+  --color-text-muted: #ea580c;
+  --color-border: #fed7aa;
+  --color-accent: #ea580c;
+  --color-accent-strong: #c2410c;
+}
+
+/* ========================
+   Theme: grape (葡萄灰紫)
+   ======================== */
+:root[data-theme="grape"],
+.shell--theme-grape {
+  --background: #f5f3ff;
+  --background-rgb: 245 243 255;
+  --primary: #7c3aed;
+  --primary-rgb: 124 58 237;
+  --bg-color: #f5f3ff;
+  --bg-gradient-1: #ddd6fe;
+  --bg-gradient-1-rgb: 221 214 254;
+  --bg-gradient-2: #f5d0fe;
+  --bg-gradient-2-rgb: 245 208 254;
+  --bg-gradient-3: #ede9fe;
+  --bg-gradient-3-rgb: 237 233 254;
+  --color-surface: #f5f3ff;
+  --color-surface-strong: #e9d5ff;
+  --color-text: #4c1d95;
+  --color-text-muted: #7c3aed;
+  --color-border: #c4b5fd;
+  --color-accent: #7c3aed;
+  --color-accent-strong: #6d28d9;
+}
+
+/* ========================
+   Theme: ocean (海湾青)
+   ======================== */
+:root[data-theme="ocean"],
+.shell--theme-ocean {
+  --background: #f0f9ff;
+  --background-rgb: 240 249 255;
+  --primary: #0284c7;
+  --primary-rgb: 2 132 199;
+  --bg-color: #f0f9ff;
+  --bg-gradient-1: #cfefff;
+  --bg-gradient-1-rgb: 207 239 255;
+  --bg-gradient-2: #bae6fd;
+  --bg-gradient-2-rgb: 186 230 253;
+  --bg-gradient-3: #dbeafe;
+  --bg-gradient-3-rgb: 219 234 254;
+  --color-surface: #f0f9ff;
+  --color-surface-strong: #e0f2fe;
+  --color-text: #0c4a6e;
+  --color-text-muted: #0284c7;
+  --color-border: #7dd3fc;
+  --color-accent: #0284c7;
+  --color-accent-strong: #0369a1;
+}
+
+/* ========================
+   Theme: forest (松林绿)
+   ======================== */
+:root[data-theme="forest"],
+.shell--theme-forest {
+  --background: #f0fdf4;
+  --background-rgb: 240 253 244;
+  --primary: #166534;
+  --primary-rgb: 22 101 52;
+  --bg-color: #f0fdf4;
+  --bg-gradient-1: #bbf7d0;
+  --bg-gradient-1-rgb: 187 247 208;
+  --bg-gradient-2: #dcfce7;
+  --bg-gradient-2-rgb: 220 252 231;
+  --bg-gradient-3: #ecfdf5;
+  --bg-gradient-3-rgb: 236 253 245;
+  --color-surface: #f0fdf4;
+  --color-surface-strong: #bbf7d0;
+  --color-text: #14532d;
+  --color-text-muted: #166534;
+  --color-border: #86efac;
+  --color-accent: #166534;
+  --color-accent-strong: #14532d;
+}
+
+/* ========================
+   Theme: rose (玫瑰粉)
+   ======================== */
+:root[data-theme="rose"],
+.shell--theme-rose {
+  --background: #fff1f2;
+  --background-rgb: 255 241 242;
+  --primary: #db2777;
+  --primary-rgb: 219 39 119;
+  --bg-color: #fff1f2;
+  --bg-gradient-1: #ffe4e6;
+  --bg-gradient-1-rgb: 255 228 230;
+  --bg-gradient-2: #fbcfe8;
+  --bg-gradient-2-rgb: 251 207 232;
+  --bg-gradient-3: #fdf2f8;
+  --bg-gradient-3-rgb: 253 242 248;
+  --color-surface: #fff1f2;
+  --color-surface-strong: #fce7f3;
+  --color-text: #831843;
+  --color-text-muted: #db2777;
+  --color-border: #f9a8d4;
+  --color-accent: #db2777;
+  --color-accent-strong: #be185d;
+}
+
+/* ========================
+   Theme: slate (石板灰)
+   ======================== */
+:root[data-theme="slate"],
+.shell--theme-slate {
+  --background: #f8fafc;
+  --background-rgb: 248 250 252;
+  --primary: #475569;
+  --primary-rgb: 71 85 105;
+  --bg-color: #f8fafc;
+  --bg-gradient-1: #f1f5f9;
+  --bg-gradient-1-rgb: 241 245 249;
+  --bg-gradient-2: #e2e8f0;
+  --bg-gradient-2-rgb: 226 232 240;
+  --bg-gradient-3: #ffffff;
+  --bg-gradient-3-rgb: 255 255 255;
+  --color-surface: #f8fafc;
+  --color-surface-strong: #f1f5f9;
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-border: #cbd5e1;
+  --color-accent: #475569;
+  --color-accent-strong: #334155;
+}
+
+/* ========================
+   Theme: aurora (极光青)
+   ======================== */
+:root[data-theme="aurora"],
+.shell--theme-aurora {
+  --background: #f0fdfa;
+  --background-rgb: 240 253 250;
+  --primary: #0d9488;
+  --primary-rgb: 13 148 136;
+  --bg-color: #f0fdfa;
+  --bg-gradient-1: #ccfbf1;
+  --bg-gradient-1-rgb: 204 251 241;
+  --bg-gradient-2: #e0f2fe;
+  --bg-gradient-2-rgb: 224 242 254;
+  --bg-gradient-3: #cffafe;
+  --bg-gradient-3-rgb: 207 250 254;
+  --color-surface: #f0fdfa;
+  --color-surface-strong: #ccfbf1;
+  --color-text: #134e4a;
+  --color-text-muted: #0d9488;
+  --color-border: #5eead4;
+  --color-accent: #0d9488;
+  --color-accent-strong: #0f766e;
+}
+
+/* ========================
+   Body Background (top-light, bottom-dark gradient)
+   ======================== */
+html body {
+  background-color: var(--background) !important;
+  color: var(--color-text);
+  min-height: 100vh;
+  margin: 0;
+  position: relative;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+html body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% 0%, var(--bg-gradient-1) 0%, transparent 90%),
+    radial-gradient(ellipse 60% 30% at 20% 5%, var(--bg-gradient-2) 0%, transparent 85%),
+    radial-gradient(ellipse 50% 25% at 80% 3%, var(--bg-gradient-3) 0%, transparent 80%),
+    linear-gradient(180deg, transparent 0%, rgba(var(--background-rgb), 0.15) 30%, rgba(var(--background-rgb), 0.5) 70%, rgba(var(--background-rgb), 0.8) 100%);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
 
 .shell-sidebar {
@@ -31,6 +355,7 @@
   border-right: 1px solid var(--color-border);
   background: rgba(255, 253, 249, 0.7);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -38,6 +363,16 @@
   min-height: 0;
   scrollbar-width: thin;
   scrollbar-color: var(--shell-scrollbar-thumb) var(--shell-scrollbar-track);
+  transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+/* Dark theme sidebar */
+[data-theme='dark'] .shell-sidebar,
+[data-theme='dark-one'] .shell-sidebar,
+.shell--theme-dark .shell-sidebar,
+.shell--theme-dark-one .shell-sidebar {
+  background: rgba(23, 23, 26, 0.8);
+  color-scheme: dark;
 }
 
 .shell-main__content {
@@ -110,6 +445,12 @@
   overflow: hidden;
 }
 
+.shell-main--micro-route {
+  padding: 0;
+  gap: 0;
+  grid-template-rows: 1fr;
+}
+
 .shell-header {
   display: flex;
   justify-content: space-between;
@@ -142,10 +483,20 @@
   min-height: 0;
 }
 
+.shell-main__body--micro-route {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+}
+
 .shell-main__content {
   min-width: 0;
   overflow: auto;
   min-height: 0;
+}
+
+.shell-main__content--micro-route {
+  display: none;
 }
 
 .shell-page-card {
@@ -154,11 +505,57 @@
   border-radius: var(--radius-lg);
   padding: 28px;
   box-shadow: var(--shadow-card);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Dark theme page card */
+[data-theme='dark'] .shell-page-card,
+[data-theme='dark-one'] .shell-page-card,
+.shell--theme-dark .shell-page-card,
+.shell--theme-dark-one .shell-page-card {
+  background: var(--color-surface);
 }
 
 .shell-page-card--compact {
   display: grid;
   gap: 12px;
+}
+
+.shell-page-card--micro-brief {
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.shell-page-card__intro {
+  display: grid;
+  gap: 12px;
+}
+
+.shell-page-card__intro p {
+  margin-bottom: 0;
+  max-width: 68ch;
+}
+
+.shell-page-card__status {
+  flex: 0 0 auto;
+  min-width: 140px;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-strong);
+}
+
+.shell-page-card__status-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .shell-page-card h1,
@@ -180,27 +577,51 @@
   border: 1px solid var(--color-border);
 }
 
+/* Dark theme grid article */
+[data-theme='dark'] .shell-grid article,
+[data-theme='dark-one'] .shell-grid article,
+.shell--theme-dark .shell-grid article,
+.shell--theme-dark-one .shell-grid article {
+  background: var(--color-surface-strong);
+}
+
 .shell-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(198, 93, 31, 0.12);
-  color: var(--color-accent-strong);
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  transition: all 0.4s ease;
 }
 
 .shell-button {
-  border: none;
+  border: 1px solid var(--color-accent);
   border-radius: 999px;
   padding: 12px 18px;
-  background: var(--color-accent);
-  color: #fff;
+  background: transparent;
+  color: var(--color-accent);
   cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.shell-button:hover {
+  background: rgba(var(--color-accent), 0.08);
+}
+
+/* Dark theme shell-button */
+[data-theme='dark'] .shell-button,
+[data-theme='dark-one'] .shell-button,
+.shell--theme-dark .shell-button,
+.shell--theme-dark-one .shell-button {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .shell-button--ghost {
@@ -209,9 +630,13 @@
   border: 1px solid var(--color-border);
 }
 
+.shell-button--ghost:hover {
+  background: rgba(var(--color-accent), 0.08);
+}
+
 .shell-micro-app-panel {
   min-width: 0;
-  background: rgba(255, 253, 249, 0.78);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -220,6 +645,24 @@
   flex-direction: column;
   min-height: 0;
   position: relative;
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Dark theme micro app panel */
+[data-theme='dark'] .shell-micro-app-panel,
+[data-theme='dark-one'] .shell-micro-app-panel,
+.shell--theme-dark .shell-micro-app-panel,
+.shell--theme-dark-one .shell-micro-app-panel {
+  background: var(--color-surface);
+}
+
+.shell-micro-app-panel--micro-route {
+  min-height: 0;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 .shell-micro-app-panel.is-hidden {
@@ -227,11 +670,19 @@
 }
 
 .shell-micro-app-panel__header {
-  padding: 16px 18px;
+  padding: 14px 18px;
   border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: var(--color-surface-strong);
+}
+
+/* Dark theme header */
+[data-theme='dark'] .shell-micro-app-panel__header,
+[data-theme='dark-one'] .shell-micro-app-panel__header,
+.shell--theme-dark .shell-micro-app-panel__header,
+.shell--theme-dark-one .shell-micro-app-panel__header {
   background: var(--color-surface-strong);
 }
 
@@ -335,6 +786,15 @@
   .shell-main__body {
     grid-template-columns: 1fr;
   }
+
+  .shell-page-card--micro-brief {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shell-page-card__status {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 768px) {
@@ -347,3 +807,177 @@
   }
 }
 
+/* ========================
+   Theme Panel
+   ======================== */
+.theme-panel__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 40;
+}
+
+.theme-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  width: 90%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 41;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.theme-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.theme-panel__header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.theme-panel__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  transition: all 150ms ease;
+}
+
+.theme-panel__close:hover {
+  background: var(--color-surface-strong);
+  color: var(--color-text);
+}
+
+.theme-panel__desc {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.theme-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.theme-panel__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  background: var(--color-surface-strong);
+  cursor: pointer;
+  transition: all 200ms ease;
+  position: relative;
+}
+
+.theme-panel__item:hover {
+  border-color: var(--color-border);
+  transform: translateY(-2px);
+}
+
+.theme-panel__item.is-active {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+}
+
+.theme-panel__color {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.theme-panel__name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.theme-panel__check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ripple animation */
+.theme-panel__ripple {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0.5;
+  pointer-events: none;
+  animation: ripple-expand 0.6s ease-out forwards;
+}
+
+@keyframes ripple-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* System theme ripple effect */
+.theme-ripple {
+  position: fixed;
+  width: 100vmax;
+  height: 100vmax;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 9999;
+  animation: system-ripple 0.4s ease-out forwards;
+}
+
+@keyframes system-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}

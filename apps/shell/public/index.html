@@ -4,9 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>qiankun demo shell</title>
+    <script>
+      (function () {
+        var redirectKey = "gh-pages-spa-path";
+        var redirectPath = window.sessionStorage.getItem(redirectKey);
+
+        if (!redirectPath) {
+          return;
+        }
+
+        window.sessionStorage.removeItem(redirectKey);
+        window.history.replaceState(null, "", redirectPath);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
   </body>
 </html>
-

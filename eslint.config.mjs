@@ -18,6 +18,17 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ["**/*.{js,mjs,ts,tsx}"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+  {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: "latest",
@@ -36,6 +47,17 @@ export default tseslint.config(
         "error",
         { prefer: "type-imports" },
       ],
+    },
+  },
+  {
+    files: ["templates/vue3-webpack-micro-app/**/*.{js,mjs}"],
+    languageOptions: {
+      globals: {
+        __APP_PORT__: "readonly",
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
 );
