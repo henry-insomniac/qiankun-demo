@@ -79,11 +79,20 @@ module.exports = (_, argv) => {
       }),
       new webpack.DefinePlugin({
         __SHELL_BASE_PATH__: JSON.stringify(shellBasePath),
-        __ORDERS_APP_ENTRY__: JSON.stringify(
-          process.env.ORDERS_APP_ENTRY || "http://localhost:7101",
-        ),
         __ROOMS_APP_ENTRY__: JSON.stringify(
           process.env.ROOMS_APP_ENTRY || "http://localhost:7102",
+        ),
+        __SURVEY_DOCTOR_QA_PROXY_URL__: JSON.stringify(
+          process.env.SURVEY_DOCTOR_QA_URL || "http://localhost:7203",
+        ),
+        __CROSS_DOCUMENT_ANNOTATION_PROXY_URL__: JSON.stringify(
+          process.env.CROSS_DOCUMENT_ANNOTATION_URL || "http://localhost:7205",
+        ),
+        __PDF_PARSER_PROXY_URL__: JSON.stringify(
+          process.env.PDF_PARSER_URL || "http://localhost:7204",
+        ),
+        __KNOWLEDGE_GRAPH_PROXY_URL__: JSON.stringify(
+          process.env.KNOWLEDGE_GRAPH_URL || "http://localhost:7206",
         ),
       }),
     ],

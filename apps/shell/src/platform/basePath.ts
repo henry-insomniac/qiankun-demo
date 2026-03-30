@@ -6,7 +6,10 @@ function normalizeShellBasePath(basePath: string): string {
   return basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
 }
 
-export const shellBasePath = normalizeShellBasePath(__SHELL_BASE_PATH__);
+const runtimeShellBasePath =
+  typeof __SHELL_BASE_PATH__ !== "undefined" ? __SHELL_BASE_PATH__ : "";
+
+export const shellBasePath = normalizeShellBasePath(runtimeShellBasePath);
 
 export function resolveShellPath(path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;

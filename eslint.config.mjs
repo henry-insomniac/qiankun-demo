@@ -8,8 +8,10 @@ export default tseslint.config(
     ignores: [
       "coverage/**",
       "dist/**",
+      "dist-pages/**",
       "**/coverage/**",
       "**/dist/**",
+      "**/dist-pages/**",
       "node_modules/**",
       "**/node_modules/**",
       "**/*.cjs",

@@ -33,7 +33,9 @@ export function applyTheme(themeId: ThemeId): void {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, themeId);
-    } catch {}
+    } catch {
+      // Ignore storage write failures in private mode or restricted contexts.
+    }
   }
 }
 
