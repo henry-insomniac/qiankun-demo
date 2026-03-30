@@ -7,6 +7,7 @@ import {
 
 import type { ShellNavigation } from "@qiankun-demo/contracts";
 
+import { normalizeRouteBase } from "@/lib/route-mode";
 import AuditPage from "@/pages/AuditPage.vue";
 import CompliancePage from "@/pages/CompliancePage.vue";
 import DataManagementPage from "@/pages/DataManagementPage.vue";
@@ -15,14 +16,6 @@ import ProjectSettingsPage from "@/pages/ProjectSettingsPage.vue";
 import ProjectsListPage from "@/pages/ProjectsListPage.vue";
 import ReportEditorPage from "@/pages/ReportEditorPage.vue";
 import TemplateSelectPage from "@/pages/TemplateSelectPage.vue";
-
-function normalizeRouteBase(base = "/"): string {
-  if (!base || base === "/") {
-    return "/";
-  }
-
-  return base.startsWith("/") ? base.replace(/\/+$/, "") : `/${base.replace(/\/+$/, "")}`;
-}
 
 function resolveChildPathFromHash(routeBase: string, currentHash: string): string {
   const normalizedBase = normalizeRouteBase(routeBase);
