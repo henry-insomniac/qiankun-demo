@@ -5,6 +5,7 @@ import vue from "@vitejs/plugin-vue";
 import qiankun from "vite-plugin-qiankun";
 
 const useDevMode = process.env.QIANKUN_DEV === "true";
+const buildBase = process.env.SURVEY_REPORTING_APP_BASE_PATH || "/";
 
 export default defineConfig({
   plugins: [vue(), qiankun("survey-reporting-app", { useDevMode })],
@@ -13,7 +14,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
-  base: "/",
+  base: buildBase,
   server: {
     port: 7103,
     cors: true,

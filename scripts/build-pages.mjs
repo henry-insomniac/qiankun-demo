@@ -56,8 +56,15 @@ execSync("pnpm build", {
     ...process.env,
     PUBLIC_BASE_PATH: publicBasePath,
     SHELL_BASE_PATH: shellBasePath,
-    ORDERS_APP_ENTRY: joinUnderBase(publicBasePath, "apps/orders/"),
     ROOMS_APP_ENTRY: joinUnderBase(publicBasePath, "apps/rooms/"),
+    SURVEY_REPORTING_APP_ENTRY: joinUnderBase(
+      publicBasePath,
+      "apps/survey-reporting/",
+    ),
+    SURVEY_REPORTING_APP_BASE_PATH: joinUnderBase(
+      publicBasePath,
+      "apps/survey-reporting/",
+    ),
   },
 });
 
@@ -65,14 +72,18 @@ rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
 
 copyDirectoryContents(path.join(rootDir, "apps/shell/dist"), outputDir);
-cpSync(path.join(rootDir, "apps/orders-app/dist"), path.join(outputDir, "apps/orders"), {
-  recursive: true,
-  force: true,
-});
 cpSync(path.join(rootDir, "apps/rooms-app/dist"), path.join(outputDir, "apps/rooms"), {
   recursive: true,
   force: true,
 });
+cpSync(
+  path.join(rootDir, "apps/survey-reporting-app/dist"),
+  path.join(outputDir, "apps/survey-reporting"),
+  {
+    recursive: true,
+    force: true,
+  },
+);
 
 writeFileSync(path.join(outputDir, ".nojekyll"), "");
 writeFileSync(
