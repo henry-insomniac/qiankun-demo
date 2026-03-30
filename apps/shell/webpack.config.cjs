@@ -82,6 +82,9 @@ module.exports = (_, argv) => {
         __ROOMS_APP_ENTRY__: JSON.stringify(
           process.env.ROOMS_APP_ENTRY || "http://localhost:7102",
         ),
+        __SURVEY_REPORTING_APP_ENTRY__: JSON.stringify(
+          process.env.SURVEY_REPORTING_APP_ENTRY || "http://localhost:7103",
+        ),
         __SURVEY_DOCTOR_QA_PROXY_URL__: JSON.stringify(
           process.env.SURVEY_DOCTOR_QA_URL || "http://localhost:7203",
         ),
@@ -100,6 +103,13 @@ module.exports = (_, argv) => {
       port: 7100,
       hot: true,
       historyApiFallback: true,
+      client: {
+        overlay: {
+          errors: true,
+          warnings: false,
+          runtimeErrors: false,
+        },
+      },
       headers: {
         "Access-Control-Allow-Origin": "*",
       },

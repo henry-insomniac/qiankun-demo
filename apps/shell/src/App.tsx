@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { createMockAuthClient } from "@qiankun-demo/auth-sdk";
 import type { PlatformGlobalState } from "@qiankun-demo/contracts";
 import { TOKENS_VERSION } from "@qiankun-demo/design-tokens";
-import { THEMES } from "./lib/theme";
+import { THEMES, themeModeFromThemeId } from "./lib/theme";
 
 import { bootstrapQiankun } from "./platform/bootstrapQiankun";
 import {
@@ -31,10 +31,10 @@ function HomePage() {
   return (
     <section className="shell-page-card">
       <span className="shell-badge">Platform Overview</span>
-      <h1>统一基座已切到真实系统接入模式</h1>
+      <h1>统一基座已进入真实业务微应用接入阶段</h1>
       <p>
-        当前 shell 保留一个 qiankun 样板微应用用于契约验证，同时把 4
-        个现有系统接到统一导航下。样板间继续承担生命周期和主题联调职责，其余业务入口走存量系统兼容接入。
+        当前 shell 已接入首个真实 qiankun 业务微应用“AI 勘察报告智能生成系统”，并继续保留样板间承担生命周期和主题联调职责。
+        其余 4 个现有系统暂时仍通过兼容代理方式挂到统一导航下。
       </p>
       <div className="shell-grid">
         {platformApps.map((app) => (
@@ -274,6 +274,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    shellSharedState.setGlobalState?.({
+      themeMode: themeModeFromThemeId(theme),
+    });
+  }, [theme]);
+
+  useEffect(() => {
     bootstrapQiankun({
       manifests: microAppManifests,
       createProps: (manifest) => ({
@@ -302,7 +308,8 @@ export default function App() {
     shellNavigation.replace("/login");
   }
 
-  const currentThemeName = THEMES.find((item) => item.id === theme)?.name || theme;
+  const currentThemeName =
+    THEMES.find((item) => item.id === theme)?.name ?? theme ?? "system";
 
   function handleThemeSelectWithRipple(themeId: string) {
     const selectedTheme = THEMES.find((item) => item.id === themeId);
@@ -405,15 +412,15 @@ export default function App() {
             className={`shell-micro-app-panel ${showAppPanel ? "is-active shell-micro-app-panel--micro-route" : "is-hidden"}`}
             aria-hidden={!showAppPanel}
           >
-            {showAppPanel && activePlatformApp ? (
-              <div id="micro-app-slot" className="shell-micro-app-panel__slot">
-                {activeEmbeddedApp ? (
-                  <EmbeddedAppFrame app={activeEmbeddedApp} />
-                ) : null}
+            <div
+              id="micro-app-slot"
+              className={`shell-micro-app-panel__slot ${activeEmbeddedApp ? "is-hidden" : ""}`}
+            />
+            {showAppPanel && activeEmbeddedApp ? (
+              <div className="shell-micro-app-panel__iframe-slot">
+                <EmbeddedAppFrame app={activeEmbeddedApp} />
               </div>
-            ) : (
-              <div id="micro-app-slot" className="shell-micro-app-panel__slot" />
-            )}
+            ) : null}
           </section>
         </div>
       </div>

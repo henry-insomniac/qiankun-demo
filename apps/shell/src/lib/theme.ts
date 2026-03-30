@@ -18,12 +18,20 @@ export const THEMES = [
 export type ThemeId = (typeof THEMES)[number]["id"];
 
 export const themeIds = THEMES.map((t) => t.id);
+export const DARK_THEME_IDS = new Set<ThemeId>(["dark", "dark-one"]);
 
 export const DEFAULT_THEME: ThemeId = "tech";
 
 export function normalizeTheme(value: string | null | undefined): ThemeId {
   const normalized = THEMES.find((t) => t.id === value);
   return normalized?.id ?? DEFAULT_THEME;
+}
+
+export function themeModeFromThemeId(
+  value: string | null | undefined,
+): "light" | "dark" {
+  const normalized = normalizeTheme(value);
+  return DARK_THEME_IDS.has(normalized) ? "dark" : "light";
 }
 
 export function applyTheme(themeId: ThemeId): void {

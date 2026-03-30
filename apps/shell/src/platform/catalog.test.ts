@@ -7,13 +7,18 @@ import {
 } from "./catalog";
 
 describe("platform app catalog", () => {
-  it("keeps rooms as the only qiankun-managed sample app", () => {
+  it("registers the real survey reporting app and the rooms sample app as qiankun apps", () => {
     const qiankunApps = platformApps.filter(isQiankunPlatformApp);
 
-    expect(qiankunApps).toHaveLength(1);
-    expect(qiankunApps[0]?.id).toBe("rooms-app");
-    expect(microAppManifests).toHaveLength(1);
-    expect(microAppManifests[0]?.name).toBe("rooms-app");
+    expect(qiankunApps.map((app) => app.id)).toEqual([
+      "survey-reporting-app",
+      "rooms-app",
+    ]);
+    expect(microAppManifests).toHaveLength(2);
+    expect(microAppManifests.map((item) => item.name)).toEqual([
+      "survey-reporting-app",
+      "rooms-app",
+    ]);
   });
 
   it("registers the four external systems as embedded apps", () => {
@@ -28,6 +33,9 @@ describe("platform app catalog", () => {
   });
 
   it("matches current routes to the configured app entry", () => {
+    expect(findPlatformAppByPath("/survey-reporting/projects/alpha-station/report")?.id).toBe(
+      "survey-reporting-app",
+    );
     expect(findPlatformAppByPath("/knowledge-graph/workspace")?.id).toBe(
       "knowledge-graph",
     );

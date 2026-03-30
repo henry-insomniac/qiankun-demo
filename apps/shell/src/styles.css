@@ -760,11 +760,26 @@ html body::before {
   overflow: hidden;
 }
 
+.shell-micro-app-panel__slot.is-hidden {
+  display: none;
+}
+
 .shell--app-route .shell-micro-app-panel__slot {
   border: none;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+}
+
+.shell-micro-app-panel__iframe-slot {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.shell-micro-app-panel__iframe-slot > * {
+  width: 100%;
+  min-height: 0;
 }
 
 .shell-micro-app-panel__slot > * {

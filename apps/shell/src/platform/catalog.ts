@@ -9,6 +9,11 @@ const roomsAppEntry =
     ? __ROOMS_APP_ENTRY__
     : "http://localhost:7102";
 
+const surveyReportingAppEntry =
+  typeof __SURVEY_REPORTING_APP_ENTRY__ !== "undefined"
+    ? __SURVEY_REPORTING_APP_ENTRY__
+    : "http://localhost:7103";
+
 const surveyDoctorQaProxyUrl =
   typeof __SURVEY_DOCTOR_QA_PROXY_URL__ !== "undefined"
     ? __SURVEY_DOCTOR_QA_PROXY_URL__
@@ -54,6 +59,7 @@ export interface EmbeddedPlatformApp extends PlatformAppCommon {
 export type PlatformApp = QiankunPlatformApp | EmbeddedPlatformApp;
 
 const roomsRoutePath = "/rooms";
+const surveyReportingRoutePath = "/survey-reporting";
 
 const roomsManifest: MicroAppManifest = {
   name: "rooms-app",
@@ -70,7 +76,34 @@ const roomsManifest: MicroAppManifest = {
 
 assertMicroAppManifest(roomsManifest);
 
+const surveyReportingManifest: MicroAppManifest = {
+  name: "survey-reporting-app",
+  domain: "survey-reporting",
+  entry: surveyReportingAppEntry,
+  activeRule: resolveShellPath(surveyReportingRoutePath),
+  mountContainer: "#micro-app-slot",
+  routeBase: resolveShellPath(surveyReportingRoutePath),
+  ownerTeam: "survey-ai",
+  version: "0.1.0",
+  standaloneUrl: surveyReportingAppEntry,
+  critical: true,
+};
+
+assertMicroAppManifest(surveyReportingManifest);
+
 export const platformApps: PlatformApp[] = [
+  {
+    id: "survey-reporting-app",
+    kind: "qiankun",
+    routePath: surveyReportingRoutePath,
+    navLabel: "AI 勘察报告",
+    title: "AI 勘察报告智能生成系统",
+    summary:
+      "首个真实业务 qiankun 微应用，覆盖项目、数据、模板、生成、编辑、校验和审核流程。",
+    integrationLabel: "qiankun",
+    standaloneUrl: surveyReportingAppEntry,
+    manifest: surveyReportingManifest,
+  },
   {
     id: "survey-doctor-qa",
     kind: "embedded",
