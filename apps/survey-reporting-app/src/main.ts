@@ -13,8 +13,28 @@ import { createAppRouter } from "./router";
 import "./styles.css";
 
 let app: VueApp<Element> | null = null;
+let disposeRouter: (() => void) | null = null;
 
-function render(props: Partial<ShellAppProps> = {}): void {
+function normalizeRouteBase(base = "/"): string {
+  if (!base || base === "/") {
+    return "/";
+  }
+
+  return base.startsWith("/") ? base.replace(/\/+$/, "") : `/${base.replace(/\/+$/, "")}`;
+}
+
+function shouldUseShellHashBridge(routeBase: string): boolean {
+  if (typeof window === "undefined" || !qiankunWindow.__POWERED_BY_QIANKUN__) {
+    return false;
+  }
+
+  const normalizedRouteBase = normalizeRouteBase(routeBase);
+  const normalizedHash = window.location.hash.replace(/^#/, "");
+
+  return Boolean(normalizedHash) && normalizedHash.startsWith(normalizedRouteBase);
+}
+
+async function render(props: Partial<ShellAppProps> = {}): Promise<void> {
   const container =
     props.container?.querySelector("#app") ?? document.querySelector("#app");
 
@@ -22,11 +42,20 @@ function render(props: Partial<ShellAppProps> = {}): void {
     throw new Error("Survey reporting app mount container #app not found.");
   }
 
-  const router = createAppRouter(props.routeBase ?? "/");
+  const routeBase = props.routeBase ?? "/";
+  const routerBundle = createAppRouter({
+    base: routeBase,
+    useShellHashBridge: shouldUseShellHashBridge(routeBase),
+    navigation: props.navigation,
+  });
+
+  disposeRouter?.();
+  disposeRouter = routerBundle.dispose;
+  await routerBundle.ready;
 
   app = createApp(App);
   app.provide(shellPropsKey, props);
-  app.use(router);
+  app.use(routerBundle.router);
   app.use(Antd);
   app.use(AntdX);
   app.mount(container);
@@ -34,20 +63,22 @@ function render(props: Partial<ShellAppProps> = {}): void {
 
 renderWithQiankun({
   bootstrap() {},
-  mount(props) {
+  async mount(props) {
     app?.unmount();
     app = null;
-    render(props as ShellAppProps);
+    await render(props as ShellAppProps);
   },
   update() {},
   unmount() {
+    disposeRouter?.();
+    disposeRouter = null;
     app?.unmount();
     app = null;
   },
 });
 
 if (!qiankunWindow.__POWERED_BY_QIANKUN__) {
-  render({
+  void render({
     appName: "survey-reporting-app",
     routeBase: "/",
   });
