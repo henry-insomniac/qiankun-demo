@@ -10,8 +10,12 @@ export function normalizeAppPath(path: string): string {
   return path.startsWith("/") ? path : `/${path}`;
 }
 
-export const shellBasePath = normalizeShellBasePath(__SHELL_BASE_PATH__);
-export const useHashRouting = __USE_HASH_ROUTING__;
+const runtimeShellBasePath =
+  typeof __SHELL_BASE_PATH__ !== "undefined" ? __SHELL_BASE_PATH__ : "";
+
+export const shellBasePath = normalizeShellBasePath(runtimeShellBasePath);
+export const useHashRouting =
+  typeof __USE_HASH_ROUTING__ !== "undefined" ? __USE_HASH_ROUTING__ : false;
 
 export function resolveLogicalAppPath(path: string): string {
   return normalizeAppPath(path);
@@ -30,7 +34,9 @@ export function resolveShellPathForMode(
     return `#${normalizedPath}`;
   }
 
-  const normalizedShellBasePath = normalizeShellBasePath(options.shellBasePath ?? "");
+  const normalizedShellBasePath = normalizeShellBasePath(
+    options.shellBasePath ?? "",
+  );
 
   return normalizedShellBasePath
     ? `${normalizedShellBasePath}${normalizedPath}`
@@ -44,7 +50,10 @@ export function resolveShellPath(path: string): string {
   });
 }
 
-export function matchHashRoutePrefixForPath(routePrefix: string, currentHash: string): boolean {
+export function matchHashRoutePrefixForPath(
+  routePrefix: string,
+  currentHash: string,
+): boolean {
   const normalizedPrefix = normalizeAppPath(routePrefix);
   const normalizedCurrentPath =
     (currentHash.replace(/^#/, "").split(/[?#]/, 1)[0] || "/").trim() || "/";

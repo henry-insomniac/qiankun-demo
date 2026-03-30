@@ -34,6 +34,10 @@
 
 这里的“推荐”是平台工程建议，不代表 Vue 3 + Vite 不可用。
 
+如果必须使用 Vite，请继续阅读：
+
+- [Vue 3 + Vite 微应用接入例外说明](./vue3-vite-micro-app-onboarding.md)
+
 ## 2. 接入前必须确认的 4 件事
 
 1. 平台已经为你的系统分配 `name`

@@ -4,6 +4,9 @@ import { BrowserRouter, HashRouter } from "react-router-dom";
 
 import "@qiankun-demo/design-tokens/styles.css";
 
+import { ThemeProvider } from "next-themes";
+import { DEFAULT_THEME, themeIds } from "./lib/theme";
+
 import App from "./App";
 import { shellBasePath, useHashRouting } from "./platform/basePath";
 import "./styles.css";
@@ -18,14 +21,22 @@ const Router = useHashRouting ? HashRouter : BrowserRouter;
 
 createRoot(rootContainer).render(
   <StrictMode>
-    <Router
-      basename={useHashRouting ? undefined : shellBasePath || undefined}
-      future={{
-        v7_relativeSplatPath: true,
-        v7_startTransition: true,
-      }}
+    <ThemeProvider
+      attribute="data-theme"
+      defaultTheme={DEFAULT_THEME}
+      themes={themeIds}
+      enableSystem={false}
+      disableTransitionOnChange
     >
-      <App />
-    </Router>
+      <Router
+        basename={useHashRouting ? undefined : shellBasePath || undefined}
+        future={{
+          v7_relativeSplatPath: true,
+          v7_startTransition: true,
+        }}
+      >
+        <App />
+      </Router>
+    </ThemeProvider>
   </StrictMode>,
 );

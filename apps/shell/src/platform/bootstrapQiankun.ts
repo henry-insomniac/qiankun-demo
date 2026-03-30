@@ -14,6 +14,37 @@ let registered = false;
 let started = false;
 let hooked = false;
 
+function isExternalExtensionError(input: unknown): boolean {
+  if (!input) {
+    return false;
+  }
+
+  if (typeof input === "string") {
+    return /(chrome-extension|moz-extension):\/\//i.test(input);
+  }
+
+  if (input instanceof ErrorEvent) {
+    return isExternalExtensionError(
+      `${input.message}\n${input.filename}\n${input.error?.stack ?? ""}`,
+    );
+  }
+
+  if (input instanceof Error) {
+    return isExternalExtensionError(`${input.message}\n${input.stack ?? ""}`);
+  }
+
+  if (typeof input === "object") {
+    const maybeRecord = input as Record<string, unknown>;
+    return isExternalExtensionError(
+      `${String(maybeRecord.message ?? "")}\n${String(maybeRecord.stack ?? "")}\n${String(
+        maybeRecord.filename ?? "",
+      )}`,
+    );
+  }
+
+  return false;
+}
+
 interface BootstrapQiankunOptions {
   manifests: MicroAppManifest[];
   createProps: (manifest: MicroAppManifest) => ShellAppProps;
@@ -60,6 +91,10 @@ export function bootstrapQiankun({
 
   if (!hooked) {
     addGlobalUncaughtErrorHandler((event) => {
+      if (isExternalExtensionError(event)) {
+        return;
+      }
+
       const error =
         event instanceof ErrorEvent
           ? event.error ?? new Error(event.message)

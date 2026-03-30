@@ -1,0 +1,45 @@
+import {
+  findPlatformAppByPath,
+  isEmbeddedPlatformApp,
+  isQiankunPlatformApp,
+  microAppManifests,
+  platformApps,
+} from "./catalog";
+
+describe("platform app catalog", () => {
+  it("registers the real survey reporting app and the rooms sample app as qiankun apps", () => {
+    const qiankunApps = platformApps.filter(isQiankunPlatformApp);
+
+    expect(qiankunApps.map((app) => app.id)).toEqual([
+      "survey-reporting-app",
+      "rooms-app",
+    ]);
+    expect(microAppManifests).toHaveLength(2);
+    expect(microAppManifests.map((item) => item.name)).toEqual([
+      "survey-reporting-app",
+      "rooms-app",
+    ]);
+  });
+
+  it("registers the four external systems as embedded apps", () => {
+    const embeddedApps = platformApps.filter(isEmbeddedPlatformApp);
+
+    expect(embeddedApps.map((app) => app.id)).toEqual([
+      "survey-doctor-qa",
+      "cross-document-annotation",
+      "pdf-parser",
+      "knowledge-graph",
+    ]);
+  });
+
+  it("matches current routes to the configured app entry", () => {
+    expect(findPlatformAppByPath("/survey-reporting/projects/alpha-station/report")?.id).toBe(
+      "survey-reporting-app",
+    );
+    expect(findPlatformAppByPath("/knowledge-graph/workspace")?.id).toBe(
+      "knowledge-graph",
+    );
+    expect(findPlatformAppByPath("/rooms/detail/42")?.id).toBe("rooms-app");
+    expect(findPlatformAppByPath("/missing")).toBeNull();
+  });
+});

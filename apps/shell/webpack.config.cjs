@@ -28,7 +28,9 @@ function normalizeShellBasePath(basePath = "") {
 
 module.exports = (_, argv) => {
   const isProduction = argv.mode === "production";
-  const publicBasePath = normalizePublicBasePath(process.env.PUBLIC_BASE_PATH || "/");
+  const publicBasePath = normalizePublicBasePath(
+    process.env.PUBLIC_BASE_PATH || "/",
+  );
   const shellBasePath = normalizeShellBasePath(
     process.env.SHELL_BASE_PATH || publicBasePath,
   );
@@ -81,11 +83,23 @@ module.exports = (_, argv) => {
       new webpack.DefinePlugin({
         __SHELL_BASE_PATH__: JSON.stringify(shellBasePath),
         __USE_HASH_ROUTING__: JSON.stringify(useHashRouting),
-        __ORDERS_APP_ENTRY__: JSON.stringify(
-          process.env.ORDERS_APP_ENTRY || "http://localhost:7101",
-        ),
         __ROOMS_APP_ENTRY__: JSON.stringify(
           process.env.ROOMS_APP_ENTRY || "http://localhost:7102",
+        ),
+        __SURVEY_REPORTING_APP_ENTRY__: JSON.stringify(
+          process.env.SURVEY_REPORTING_APP_ENTRY || "http://localhost:7103",
+        ),
+        __SURVEY_DOCTOR_QA_PROXY_URL__: JSON.stringify(
+          process.env.SURVEY_DOCTOR_QA_URL || "http://localhost:7203",
+        ),
+        __CROSS_DOCUMENT_ANNOTATION_PROXY_URL__: JSON.stringify(
+          process.env.CROSS_DOCUMENT_ANNOTATION_URL || "http://localhost:7205",
+        ),
+        __PDF_PARSER_PROXY_URL__: JSON.stringify(
+          process.env.PDF_PARSER_URL || "http://localhost:7204",
+        ),
+        __KNOWLEDGE_GRAPH_PROXY_URL__: JSON.stringify(
+          process.env.KNOWLEDGE_GRAPH_URL || "http://localhost:7206",
         ),
       }),
     ],
@@ -93,6 +107,13 @@ module.exports = (_, argv) => {
       port: 7100,
       hot: true,
       historyApiFallback: true,
+      client: {
+        overlay: {
+          errors: true,
+          warnings: false,
+          runtimeErrors: false,
+        },
+      },
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
