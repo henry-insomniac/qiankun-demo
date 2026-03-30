@@ -19,6 +19,14 @@ describe("platform app catalog", () => {
       "survey-reporting-app",
       "rooms-app",
     ]);
+    expect(microAppManifests.map((item) => item.routeBase)).toEqual([
+      "/survey-reporting",
+      "/rooms",
+    ]);
+    expect(microAppManifests.map((item) => item.activeRule)).toEqual([
+      "/survey-reporting",
+      "/rooms",
+    ]);
   });
 
   it("registers the four external systems as embedded apps", () => {

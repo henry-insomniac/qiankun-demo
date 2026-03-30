@@ -2,7 +2,6 @@ import {
   assertMicroAppManifest,
   type MicroAppManifest,
 } from "@qiankun-demo/contracts";
-import { resolveShellPath } from "./basePath";
 
 const roomsAppEntry =
   typeof __ROOMS_APP_ENTRY__ !== "undefined"
@@ -65,9 +64,9 @@ const roomsManifest: MicroAppManifest = {
   name: "rooms-app",
   domain: "rooms",
   entry: roomsAppEntry,
-  activeRule: resolveShellPath(roomsRoutePath),
+  activeRule: roomsRoutePath,
   mountContainer: "#micro-app-slot",
-  routeBase: resolveShellPath(roomsRoutePath),
+  routeBase: roomsRoutePath,
   ownerTeam: "platform",
   version: "0.1.0",
   standaloneUrl: roomsAppEntry,
@@ -80,9 +79,9 @@ const surveyReportingManifest: MicroAppManifest = {
   name: "survey-reporting-app",
   domain: "survey-reporting",
   entry: surveyReportingAppEntry,
-  activeRule: resolveShellPath(surveyReportingRoutePath),
+  activeRule: surveyReportingRoutePath,
   mountContainer: "#micro-app-slot",
-  routeBase: resolveShellPath(surveyReportingRoutePath),
+  routeBase: surveyReportingRoutePath,
   ownerTeam: "survey-ai",
   version: "0.1.0",
   standaloneUrl: surveyReportingAppEntry,
