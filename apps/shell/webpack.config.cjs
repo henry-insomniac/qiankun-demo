@@ -101,6 +101,9 @@ module.exports = (_, argv) => {
         __KNOWLEDGE_GRAPH_PROXY_URL__: JSON.stringify(
           process.env.KNOWLEDGE_GRAPH_URL || "http://localhost:7206",
         ),
+        __EMBEDDED_PROXY_ENABLED__: JSON.stringify(
+          process.env.EMBEDDED_PROXY_ENABLED !== "false",
+        ),
       }),
     ],
     devServer: {

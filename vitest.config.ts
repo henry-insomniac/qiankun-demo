@@ -4,6 +4,7 @@ export default defineConfig({
   define: {
     __SHELL_BASE_PATH__: JSON.stringify(""),
     __USE_HASH_ROUTING__: JSON.stringify(false),
+    __EMBEDDED_PROXY_ENABLED__: JSON.stringify(true),
   },
   test: {
     environment: "node",

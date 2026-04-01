@@ -12,6 +12,7 @@ import {
   findPlatformAppByPath,
   isEmbeddedPlatformApp,
   platformApps,
+  supportsEmbeddedFrame,
   type EmbeddedPlatformApp,
   type PlatformApp,
 } from "./platform/catalog";
@@ -83,6 +84,9 @@ function ProfilePage() {
 }
 
 function AppRoutePage({ app }: { app: PlatformApp }) {
+  const externalOnlyEmbeddedApp =
+    isEmbeddedPlatformApp(app) && !supportsEmbeddedFrame(app);
+
   return (
     <section className="shell-page-card shell-page-card--micro-brief">
       <div className="shell-page-card__intro">
@@ -91,10 +95,29 @@ function AppRoutePage({ app }: { app: PlatformApp }) {
         <p>{app.summary}</p>
       </div>
       <div className="shell-page-card__status">
-        <span className="shell-page-card__status-label">加载状态</span>
-        <strong>已就绪</strong>
+        <span className="shell-page-card__status-label">
+          {externalOnlyEmbeddedApp ? "运行说明" : "加载状态"}
+        </span>
+        <strong>{externalOnlyEmbeddedApp ? "当前环境不支持内嵌" : "已就绪"}</strong>
         {isEmbeddedPlatformApp(app) ? (
-          <span className="shell-page-card__status-meta">{app.sourceUrl}</span>
+          <>
+            <span className="shell-page-card__status-meta">{app.sourceUrl}</span>
+            {externalOnlyEmbeddedApp && app.accessNotice ? (
+              <>
+                <span className="shell-page-card__status-note">
+                  {app.accessNotice}
+                </span>
+                <a
+                  className="shell-button shell-button--tight shell-page-card__status-action"
+                  href={app.standaloneUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  独立打开原系统
+                </a>
+              </>
+            ) : null}
+          </>
         ) : null}
       </div>
     </section>
@@ -104,7 +127,7 @@ function AppRoutePage({ app }: { app: PlatformApp }) {
 function EmbeddedAppFrame({
   app,
 }: {
-  app: EmbeddedPlatformApp;
+  app: EmbeddedPlatformApp & { embedUrl: string };
 }) {
   return (
     <iframe
@@ -113,6 +136,34 @@ function EmbeddedAppFrame({
       title={app.title}
       src={app.embedUrl}
     />
+  );
+}
+
+function EmbeddedAppFallback({
+  app,
+}: {
+  app: EmbeddedPlatformApp;
+}) {
+  return (
+    <section className="shell-page-card shell-page-card--compact shell-embedded-app-fallback">
+      <span className="shell-badge">降级说明</span>
+      <h2>{app.title} 暂不支持在当前环境内嵌</h2>
+      <p>
+        {app.accessNotice ??
+          "当前环境不提供旧系统兼容代理，请使用独立打开访问原系统。"}
+      </p>
+      <div className="shell-embedded-app-fallback__actions">
+        <a
+          className="shell-button"
+          href={app.standaloneUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          独立打开原系统
+        </a>
+      </div>
+      <p className="shell-embedded-app-fallback__meta">{app.sourceUrl}</p>
+    </section>
   );
 }
 
@@ -418,7 +469,11 @@ export default function App() {
             />
             {showAppPanel && activeEmbeddedApp ? (
               <div className="shell-micro-app-panel__iframe-slot">
-                <EmbeddedAppFrame app={activeEmbeddedApp} />
+                {supportsEmbeddedFrame(activeEmbeddedApp) ? (
+                  <EmbeddedAppFrame app={activeEmbeddedApp} />
+                ) : (
+                  <EmbeddedAppFallback app={activeEmbeddedApp} />
+                )}
               </div>
             ) : null}
           </section>

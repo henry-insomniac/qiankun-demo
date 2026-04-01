@@ -88,6 +88,7 @@ Micro App (Vue / React / 其他)
 
 - `AI 勘察报告智能生成系统` 和 `样板间` 走标准 qiankun 路由型接入
 - 其余 4 个现有系统目前都还是独立 SPA，还没有补齐 qiankun 生命周期、`public-path` 和跨域治理，因此 shell 侧先通过兼容代理方式接入
+- 如果是 GitHub Pages 这类静态预览环境，shell 会把这 4 个系统自动降级为“外部直达”，不再尝试在壳内 iframe 加载本地兼容代理
 
 工程含义：
 

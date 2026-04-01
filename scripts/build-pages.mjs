@@ -54,6 +54,7 @@ execSync("pnpm build", {
   stdio: "inherit",
   env: {
     ...process.env,
+    EMBEDDED_PROXY_ENABLED: "false",
     USE_HASH_ROUTING: "true",
     PUBLIC_BASE_PATH: publicBasePath,
     SHELL_BASE_PATH: shellBasePath,
@@ -66,6 +67,14 @@ execSync("pnpm build", {
       publicBasePath,
       "apps/survey-reporting/",
     ),
+    SURVEY_DOCTOR_QA_URL:
+      process.env.SURVEY_DOCTOR_QA_URL || "http://125.71.97.56:9003",
+    CROSS_DOCUMENT_ANNOTATION_URL:
+      process.env.CROSS_DOCUMENT_ANNOTATION_URL || "http://125.71.97.56:9005",
+    PDF_PARSER_URL:
+      process.env.PDF_PARSER_URL || "http://125.71.97.56:9004",
+    KNOWLEDGE_GRAPH_URL:
+      process.env.KNOWLEDGE_GRAPH_URL || "http://125.71.97.56:9006/",
   },
 });
 

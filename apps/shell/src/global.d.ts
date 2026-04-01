@@ -6,3 +6,4 @@ declare const __SURVEY_DOCTOR_QA_PROXY_URL__: string;
 declare const __CROSS_DOCUMENT_ANNOTATION_PROXY_URL__: string;
 declare const __PDF_PARSER_PROXY_URL__: string;
 declare const __KNOWLEDGE_GRAPH_PROXY_URL__: string;
+declare const __EMBEDDED_PROXY_ENABLED__: boolean;

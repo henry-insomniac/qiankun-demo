@@ -67,6 +67,7 @@ Shell 发布在仓库根路径下，微应用 entry 发布在：
 
 - GitHub Pages 仅适合静态发布 shell 和样板微应用
 - 4 个现有系统依赖反向代理剥离 `X-Frame-Options/CSP` 后再嵌入，不适合直接走 Pages 静态托管
+- Pages 构建会把这 4 个旧系统自动降级为“外部直达”入口，不会再尝试在 shell 内加载 `localhost:720x` 代理
 
 ## External Onboarding Assets
 

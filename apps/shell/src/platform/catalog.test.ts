@@ -1,9 +1,11 @@
 import {
+  createPlatformApps,
   findPlatformAppByPath,
   isEmbeddedPlatformApp,
   isQiankunPlatformApp,
   microAppManifests,
   platformApps,
+  supportsEmbeddedFrame,
 } from "./catalog";
 
 describe("platform app catalog", () => {
@@ -38,6 +40,37 @@ describe("platform app catalog", () => {
       "pdf-parser",
       "knowledge-graph",
     ]);
+  });
+
+  it("keeps embedded legacy apps on the local compat proxy by default", () => {
+    const embeddedApps = createPlatformApps({ embeddedProxyEnabled: true }).filter(
+      isEmbeddedPlatformApp,
+    );
+
+    expect(embeddedApps.every(supportsEmbeddedFrame)).toBe(true);
+    expect(embeddedApps.map((app) => app.integrationLabel)).toEqual([
+      "兼容代理",
+      "兼容代理",
+      "兼容代理",
+      "兼容代理",
+    ]);
+  });
+
+  it("downgrades embedded legacy apps to external-only links for static preview builds", () => {
+    const embeddedApps = createPlatformApps({ embeddedProxyEnabled: false }).filter(
+      isEmbeddedPlatformApp,
+    );
+
+    expect(embeddedApps.every((app) => app.embedUrl === null)).toBe(true);
+    expect(embeddedApps.map((app) => app.accessMode)).toEqual([
+      "external-only",
+      "external-only",
+      "external-only",
+      "external-only",
+    ]);
+    expect(embeddedApps.map((app) => app.standaloneUrl)).toEqual(
+      embeddedApps.map((app) => app.sourceUrl),
+    );
   });
 
   it("matches current routes to the configured app entry", () => {
