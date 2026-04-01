@@ -550,6 +550,8 @@ html body::before {
 .shell-page-card--compact {
   display: grid;
   gap: 12px;
+  align-content: start;
+  justify-items: start;
 }
 
 .shell-page-card--micro-brief {
@@ -661,6 +663,9 @@ html body::before {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  justify-self: start;
+  width: fit-content;
+  max-width: 100%;
   padding: 6px 10px;
   border-radius: 999px;
   background: transparent;
@@ -689,12 +694,18 @@ html body::before {
 }
 
 .shell-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
   border: 1px solid var(--color-accent);
   border-radius: 999px;
   padding: 12px 18px;
   background: transparent;
   color: var(--color-accent);
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.4s ease;
 }
 
@@ -811,14 +822,65 @@ html body::before {
 }
 
 .shell-embedded-app-fallback {
-  margin: 24px;
-  align-self: stretch;
+  width: min(760px, calc(100% - 48px));
+  margin: clamp(28px, 5vw, 56px) auto;
+  padding: clamp(28px, 4vw, 40px);
+  align-self: center;
+  display: grid;
+  gap: 22px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, var(--color-accent) 8%), var(--color-surface));
+}
+
+.shell-embedded-app-fallback__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.shell-embedded-app-fallback__mode {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.shell-embedded-app-fallback__body {
+  display: grid;
+  gap: 14px;
+}
+
+.shell-embedded-app-fallback__body h2 {
+  margin: 0;
+  max-width: 16ch;
+  font-size: clamp(30px, 4vw, 42px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.shell-embedded-app-fallback__body p {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 16px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--color-text) 84%, var(--color-accent) 16%);
 }
 
 .shell-embedded-app-fallback__actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.shell-embedded-app-fallback__source-link {
+  font-size: 14px;
+}
+
+.shell-embedded-app-fallback__actions .shell-button {
+  min-height: 48px;
 }
 
 .shell-embedded-app-fallback__meta {
@@ -906,6 +968,11 @@ html body::before {
 
   .shell-page-card__status {
     min-width: 0;
+  }
+
+  .shell-embedded-app-fallback {
+    width: calc(100% - 32px);
+    margin: 16px;
   }
 
 }

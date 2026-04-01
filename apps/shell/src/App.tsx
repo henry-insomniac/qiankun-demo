@@ -145,13 +145,18 @@ function EmbeddedAppFallback({
   app: EmbeddedPlatformApp;
 }) {
   return (
-    <section className="shell-page-card shell-page-card--compact shell-embedded-app-fallback">
-      <span className="shell-badge">降级说明</span>
-      <h2>{app.title} 暂不支持在当前环境内嵌</h2>
-      <p>
-        {app.accessNotice ??
-          "当前环境不提供旧系统兼容代理，请使用独立打开访问原系统。"}
-      </p>
+    <section className="shell-page-card shell-embedded-app-fallback">
+      <div className="shell-embedded-app-fallback__eyebrow">
+        <span className="shell-badge shell-badge--subtle">静态预览</span>
+        <span className="shell-embedded-app-fallback__mode">外部直达</span>
+      </div>
+      <div className="shell-embedded-app-fallback__body">
+        <h2>{app.title} 不能在当前预览环境内嵌</h2>
+        <p>
+          {app.accessNotice ??
+            "当前环境不提供旧系统兼容代理，请使用独立打开访问原系统。"}
+        </p>
+      </div>
       <div className="shell-embedded-app-fallback__actions">
         <a
           className="shell-button"
@@ -161,8 +166,18 @@ function EmbeddedAppFallback({
         >
           独立打开原系统
         </a>
+        <a
+          className="shell-inline-link shell-embedded-app-fallback__source-link"
+          href={app.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          查看原始地址
+        </a>
       </div>
-      <p className="shell-embedded-app-fallback__meta">{app.sourceUrl}</p>
+      <p className="shell-embedded-app-fallback__meta">
+        原系统地址：{app.sourceUrl}
+      </p>
     </section>
   );
 }
