@@ -1,39 +1,34 @@
 <template>
   <section class="sr-page">
-    <a-card class="sr-page__card sr-page__card--hero" :bordered="false">
+    <a-card class="sr-page__card">
       <div class="sr-page__toolbar">
         <div>
-          <h2 class="sr-page__title">项目列表</h2>
+          <h2 class="sr-page__title">报告列表</h2>
           <p class="sr-page__desc">
-            从同一张项目台账进入数据装配、模板匹配和生成流程。
+            已生成的勘察报告台账，可在此查看、编辑或管理报告。
           </p>
         </div>
-        <a-space wrap>
-          <a-button @click="router.push('/projects/alpha-station/report')">
-            打开最近报告
-          </a-button>
-          <a-button type="primary" @click="router.push('/projects/new')">
-            新建项目
-          </a-button>
-        </a-space>
+        <a-button type="primary" @click="router.push('/projects/new')">
+          新建项目
+        </a-button>
       </div>
 
-      <div class="sr-stat-grid">
+      <div class="sr-stat-grid sr-stat-grid--compact">
+        <a-card size="small" class="sr-stat-card">
+          <span>已生成</span>
+          <strong>{{ generatedCount }}</strong>
+        </a-card>
         <a-card size="small" class="sr-stat-card">
           <span>待审核</span>
           <strong>{{ auditPendingCount }}</strong>
-        </a-card>
-        <a-card size="small" class="sr-stat-card">
-          <span>生成中</span>
-          <strong>{{ generatingCount }}</strong>
         </a-card>
         <a-card size="small" class="sr-stat-card">
           <span>已归档</span>
           <strong>{{ archivedCount }}</strong>
         </a-card>
         <a-card size="small" class="sr-stat-card">
-          <span>高风险项目</span>
-          <strong>{{ highRiskCount }}</strong>
+          <span>报告总数</span>
+          <strong>{{ reports.length }}</strong>
         </a-card>
       </div>
     </a-card>
@@ -43,7 +38,7 @@
         <a-input-search
           v-model:value="keyword"
           class="sr-page__search"
-          placeholder="搜索项目名称或地点"
+          placeholder="搜索报告名称或所属项目"
           allow-clear
         />
         <a-select
@@ -51,46 +46,45 @@
           class="sr-page__select"
           :options="statusOptions"
         />
-        <a-select
-          v-model:value="stageFilter"
-          class="sr-page__select"
-          :options="stageOptions"
-        />
       </div>
 
       <a-table
         :columns="columns"
-        :data-source="filteredProjects"
+        :data-source="filteredReports"
         row-key="id"
-        :pagination="{ pageSize: 6 }"
+        :pagination="{ pageSize: 8 }"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'name'">
             <div class="sr-project-cell">
               <strong>{{ record.name }}</strong>
-              <span>{{ record.location }}</span>
+              <span>{{ record.projectName }}</span>
             </div>
           </template>
           <template v-else-if="column.key === 'status'">
             <ProjectStatusTag :status="record.status" />
           </template>
-          <template v-else-if="column.key === 'riskLevel'">
-            <a-tag :color="riskColorMap[record.riskLevel]">{{ record.riskLevel }}</a-tag>
-          </template>
           <template v-else-if="column.key === 'actions'">
             <a-space wrap>
-              <a-button size="small" @click="router.push(`/projects/${record.id}/settings`)">
+              <a-button
+                size="small"
+                @click="router.push(`/projects/${record.projectId}/report/view?reportId=${record.id}`)"
+              >
+                查看
+              </a-button>
+              <a-button
+                size="small"
+                @click="router.push(`/projects/${record.projectId}/report`)"
+              >
                 编辑
               </a-button>
-              <a-button size="small" @click="router.push(`/projects/${record.id}/data`)">
-                进入
-              </a-button>
               <a-popconfirm
-                title="已生成和已归档项目不允许删除，是否仅清理草稿数据？"
+                title="确认删除该报告？删除后不可恢复。"
                 ok-text="确认"
                 cancel-text="取消"
+                @confirm="handleDelete(record.id)"
               >
-                <a-button size="small" danger :disabled="record.status !== '未生成'">
+                <a-button size="small" danger>
                   删除
                 </a-button>
               </a-popconfirm>
@@ -105,74 +99,58 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
 
 import ProjectStatusTag from "@/components/ProjectStatusTag.vue";
-import { projectRows } from "@/mock/data";
+import { reportRows } from "@/mock/data";
 
 const router = useRouter();
 
+const reports = ref([...reportRows]);
+
 const keyword = ref("");
 const statusFilter = ref<string>("全部状态");
-const stageFilter = ref<string>("全部阶段");
 
 const statusOptions = [
   { value: "全部状态", label: "全部状态" },
-  { value: "未生成", label: "未生成" },
-  { value: "生成中", label: "生成中" },
   { value: "已生成", label: "已生成" },
   { value: "待审核", label: "待审核" },
   { value: "已归档", label: "已归档" },
 ];
 
-const stageOptions = [
-  { value: "全部阶段", label: "全部阶段" },
-  { value: "初勘", label: "初勘" },
-  { value: "详勘", label: "详勘" },
-  { value: "施工勘察", label: "施工勘察" },
-];
-
 const columns = [
-  { title: "项目名称 / 地点", key: "name" },
-  { title: "工程类型", dataIndex: "engineeringType", key: "engineeringType" },
-  { title: "勘察阶段", dataIndex: "stage", key: "stage" },
+  { title: "报告名称 / 所属项目", key: "name" },
   { title: "负责人", dataIndex: "owner", key: "owner" },
-  { title: "创建时间", dataIndex: "createdAt", key: "createdAt" },
-  { title: "风险等级", key: "riskLevel" },
   { title: "报告状态", key: "status" },
-  { title: "操作", key: "actions" },
+  { title: "生成时间", dataIndex: "generatedAt", key: "generatedAt" },
+  { title: "更新时间", dataIndex: "updatedAt", key: "updatedAt" },
+  { title: "操作", key: "actions", width: 220 },
 ];
 
-const filteredProjects = computed(() =>
-  projectRows.filter((project) => {
+const filteredReports = computed(() =>
+  reports.value.filter((report) => {
     const matchesKeyword =
       !keyword.value ||
-      project.name.includes(keyword.value) ||
-      project.location.includes(keyword.value);
+      report.name.includes(keyword.value) ||
+      report.projectName.includes(keyword.value);
     const matchesStatus =
-      statusFilter.value === "全部状态" || project.status === statusFilter.value;
-    const matchesStage =
-      stageFilter.value === "全部阶段" || project.stage === stageFilter.value;
-
-    return matchesKeyword && matchesStatus && matchesStage;
+      statusFilter.value === "全部状态" || report.status === statusFilter.value;
+    return matchesKeyword && matchesStatus;
   }),
 );
 
-const auditPendingCount = computed(
-  () => projectRows.filter((item) => item.status === "待审核").length,
+const generatedCount = computed(
+  () => reports.value.filter((r) => r.status === "已生成").length,
 );
-const generatingCount = computed(
-  () => projectRows.filter((item) => item.status === "生成中").length,
+const auditPendingCount = computed(
+  () => reports.value.filter((r) => r.status === "待审核").length,
 );
 const archivedCount = computed(
-  () => projectRows.filter((item) => item.status === "已归档").length,
-);
-const highRiskCount = computed(
-  () => projectRows.filter((item) => item.riskLevel === "高").length,
+  () => reports.value.filter((r) => r.status === "已归档").length,
 );
 
-const riskColorMap: Record<string, string> = {
-  低: "green",
-  中: "gold",
-  高: "red",
-};
+function handleDelete(reportId: string) {
+  reports.value = reports.value.filter((r) => r.id !== reportId);
+  message.success("报告已删除");
+}
 </script>

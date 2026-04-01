@@ -8,7 +8,7 @@
     >
       <div class="sr-app__backdrop" />
       <div class="sr-app__content">
-        <section class="sr-app__hero">
+        <section v-if="!hideHero" class="sr-app__hero">
           <div class="sr-app__hero-copy">
             <span class="sr-app__eyebrow">Survey Reporting Workspace</span>
             <h1>{{ title }}</h1>
@@ -56,6 +56,8 @@ const summary = computed(
     (route.meta.summary as string | undefined) ??
     "把项目、数据、模板、AI 编排、合规校验和审核归档收敛到同一条生产线。",
 );
+
+const hideHero = computed(() => Boolean(route.meta.hideHero));
 
 const currentUserName = computed(
   () => shellProps.currentUser?.name ?? "Standalone User",

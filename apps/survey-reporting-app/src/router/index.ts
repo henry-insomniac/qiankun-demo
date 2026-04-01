@@ -12,10 +12,16 @@ import AuditPage from "@/pages/AuditPage.vue";
 import CompliancePage from "@/pages/CompliancePage.vue";
 import DataManagementPage from "@/pages/DataManagementPage.vue";
 import GeneratePage from "@/pages/GeneratePage.vue";
+import ProjectCreateWizardPage from "@/pages/ProjectCreateWizardPage.vue";
 import ProjectSettingsPage from "@/pages/ProjectSettingsPage.vue";
 import ProjectsListPage from "@/pages/ProjectsListPage.vue";
 import ReportEditorPage from "@/pages/ReportEditorPage.vue";
+import ReportViewPage from "@/pages/ReportViewPage.vue";
 import TemplateSelectPage from "@/pages/TemplateSelectPage.vue";
+import ContentAuthoringStep from "@/pages/project-create/ContentAuthoringStep.vue";
+import DocumentSettingsStep from "@/pages/project-create/DocumentSettingsStep.vue";
+import OutlineAuthoringStep from "@/pages/project-create/OutlineAuthoringStep.vue";
+import ParameterSelectionStep from "@/pages/project-create/ParameterSelectionStep.vue";
 
 function resolveChildPathFromHash(routeBase: string, currentHash: string): string {
   const normalizedBase = normalizeRouteBase(routeBase);
@@ -56,17 +62,26 @@ function createRoutes() {
       path: "/projects",
       component: ProjectsListPage,
       meta: {
-        title: "项目列表",
-        summary: "从统一项目台账进入 AI 勘察报告生产流程。",
+        title: "报告列表",
+        summary: "已生成的勘察报告台账，可查看、编辑或管理报告。",
+        hideHero: true,
       },
     },
     {
       path: "/projects/new",
-      component: ProjectSettingsPage,
+      component: ProjectCreateWizardPage,
+      redirect: "/projects/new/settings",
       meta: {
         title: "新建项目",
-        summary: "定义项目、阶段和负责人，作为后续数据装配入口。",
+        summary: "四步向导创建勘察报告项目。",
+        hideHero: true,
       },
+      children: [
+        { path: "settings", component: DocumentSettingsStep },
+        { path: "parameters", component: ParameterSelectionStep },
+        { path: "outline", component: OutlineAuthoringStep },
+        { path: "content", component: ContentAuthoringStep },
+      ],
     },
     {
       path: "/projects/:id/settings",
@@ -98,6 +113,15 @@ function createRoutes() {
       meta: {
         title: "AI 生成控制",
         summary: "编排多智能体生成、校验和文档合成任务。",
+      },
+    },
+    {
+      path: "/projects/:id/report/view",
+      component: ReportViewPage,
+      meta: {
+        title: "报告查看",
+        summary: "只读模式下查看已生成的报告内容。",
+        hideHero: true,
       },
     },
     {

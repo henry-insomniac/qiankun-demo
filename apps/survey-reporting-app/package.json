@@ -11,15 +11,20 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@ckeditor/ckeditor5-vue": "^7.4.0",
     "@qiankun-demo/contracts": "workspace:*",
     "@qiankun-demo/design-tokens": "workspace:*",
     "ant-design-vue": "^4.2.6",
     "ant-design-x-vue": "^1.6.0",
+    "ckeditor5": "^48.0.0",
+    "docx": "^9.6.1",
+    "file-saver": "^2.0.5",
     "vite-plugin-qiankun": "^1.0.15",
     "vue": "^3.5.30",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@vitejs/plugin-vue": "^6.0.5",
     "typescript": "^5.8.3",
     "vite": "^8.0.3",
