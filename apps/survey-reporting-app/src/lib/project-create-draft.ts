@@ -59,6 +59,9 @@ export interface ContentState {
   viewMode: ContentViewMode;
   selectedChapterId: string;
   isGenerating: boolean;
+  generatingChapterId: string;
+  currentPhase: string;
+  writeProgress: number;
   chapterMeta: Record<string, ChapterMeta>;
 }
 
@@ -93,6 +96,9 @@ export const draft = reactive<ProjectCreateDraft>({
     viewMode: "outline",
     selectedChapterId: "ch-1",
     isGenerating: false,
+    generatingChapterId: "",
+    currentPhase: "",
+    writeProgress: 0,
     chapterMeta: {},
   },
 });
@@ -178,5 +184,8 @@ export function resetDraft() {
   draft.content.viewMode = "outline";
   draft.content.selectedChapterId = "ch-1";
   draft.content.isGenerating = false;
+  draft.content.generatingChapterId = "";
+  draft.content.currentPhase = "";
+  draft.content.writeProgress = 0;
   draft.content.chapterMeta = {};
 }

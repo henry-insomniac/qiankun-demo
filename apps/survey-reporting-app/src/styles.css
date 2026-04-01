@@ -1014,12 +1014,17 @@
   border-radius: 14px;
   border: 1px solid var(--sr-border);
   background: var(--sr-field-bg);
-  transition: border-color 160ms ease;
+  transition: border-color 160ms ease, background 160ms ease;
 }
 
 #survey-reporting-app .sr-content-chapter-row.is-submitted {
   border-color: rgb(5 150 105 / 0.38);
   background: rgb(5 150 105 / 0.06);
+}
+
+#survey-reporting-app .sr-content-chapter-row.is-generating {
+  border-color: rgb(var(--sr-primary-rgb) / 0.4);
+  background: rgb(var(--sr-primary-rgb) / 0.04);
 }
 
 #survey-reporting-app .sr-content-chapter-row__info {
@@ -1051,6 +1056,14 @@
 #survey-reporting-app .sr-content-status--empty {
   background: rgb(156 163 175 / 0.18);
   color: #6b7280;
+}
+
+#survey-reporting-app .sr-content-status--generating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgb(var(--sr-primary-rgb) / 0.12);
+  color: var(--sr-primary);
 }
 
 /* ── Content authoring: three-column edit mode ───────── */
@@ -1106,6 +1119,7 @@
   height: 6px;
   border-radius: 999px;
   background: var(--sr-border);
+  transition: background 160ms ease, transform 160ms ease;
 }
 
 #survey-reporting-app .sr-content-tree__item.is-active .sr-content-tree__dot {
@@ -1114,6 +1128,16 @@
 
 #survey-reporting-app .sr-content-tree__item.is-submitted .sr-content-tree__dot {
   background: #059669;
+}
+
+#survey-reporting-app .sr-content-tree__item.is-generating .sr-content-tree__dot {
+  background: var(--sr-primary);
+  animation: sr-gen-dot-pulse 1.2s ease-in-out infinite;
+}
+
+#survey-reporting-app .sr-content-tree__item.has-content .sr-content-tree__dot {
+  background: var(--sr-primary);
+  opacity: 0.6;
 }
 
 #survey-reporting-app .sr-content-tree__label {
@@ -1127,6 +1151,254 @@
   flex-shrink: 0;
   font-size: 14px;
   color: #059669;
+}
+
+#survey-reporting-app .sr-content-tree__spin {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--sr-primary);
+}
+
+@keyframes sr-gen-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* ── Agent run panel ─────────────────────────────────── */
+
+#survey-reporting-app .sr-agent-panel {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--sr-border);
+  background: var(--sr-field-bg);
+  overflow: hidden;
+  transition: border-color 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#survey-reporting-app .sr-agent-panel.is-running {
+  border-color: rgb(var(--sr-primary-rgb) / 0.3);
+}
+
+#survey-reporting-app .sr-agent-panel.is-complete {
+  animation: sr-panel-complete 1.8s ease-out;
+}
+
+@keyframes sr-panel-complete {
+  0% { border-color: rgb(5 150 105 / 0.6); box-shadow: 0 0 0 3px rgb(5 150 105 / 0.1); }
+  100% { border-color: var(--sr-border); box-shadow: 0 0 0 0 rgb(5 150 105 / 0); }
+}
+
+#survey-reporting-app .sr-agent-panel__glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--sr-primary), #06b6d4, transparent);
+  background-size: 200% 100%;
+  animation: sr-glow-sweep 1.8s ease-in-out infinite;
+}
+
+@keyframes sr-glow-sweep {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+#survey-reporting-app .sr-agent-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+#survey-reporting-app .sr-agent-panel__title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+#survey-reporting-app .sr-agent-panel__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#survey-reporting-app .sr-agent-panel__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgb(var(--sr-primary-rgb) / 0.08);
+  color: var(--sr-primary);
+  flex-shrink: 0;
+}
+
+#survey-reporting-app .sr-agent-panel__controls {
+  flex-shrink: 0;
+}
+
+/* ── Agent phases ────────────────────────────────────── */
+
+#survey-reporting-app .sr-agent-phases {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sr-border);
+  animation: sr-phases-enter 220ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes sr-phases-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#survey-reporting-app .sr-agent-phases__track {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 0;
+}
+
+#survey-reporting-app .sr-agent-phase {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#survey-reporting-app .sr-agent-phase + .sr-agent-phase {
+  margin-left: 6px;
+}
+
+#survey-reporting-app .sr-agent-phase + .sr-agent-phase::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  margin-right: 6px;
+  background: var(--sr-border);
+  transition: background 200ms ease;
+}
+
+#survey-reporting-app .sr-agent-phase.is-done + .sr-agent-phase::before {
+  background: #059669;
+}
+
+#survey-reporting-app .sr-agent-phase__dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1.5px solid var(--sr-border);
+  background: var(--sr-field-bg);
+  flex-shrink: 0;
+  transition: all 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#survey-reporting-app .sr-agent-phase.is-active .sr-agent-phase__dot {
+  border-color: var(--sr-primary);
+  background: rgb(var(--sr-primary-rgb) / 0.12);
+  animation: sr-phase-pulse 1.5s ease-in-out infinite;
+}
+
+#survey-reporting-app .sr-agent-phase.is-done .sr-agent-phase__dot {
+  border-color: #059669;
+  background: #059669;
+}
+
+@keyframes sr-phase-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(var(--sr-primary-rgb) / 0.25); }
+  50% { box-shadow: 0 0 0 4px rgb(var(--sr-primary-rgb) / 0); }
+}
+
+#survey-reporting-app .sr-agent-phase__check-icon {
+  font-size: 10px;
+  color: white;
+}
+
+#survey-reporting-app .sr-agent-phase__label {
+  font-size: 12px;
+  color: var(--sr-text-muted);
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+
+#survey-reporting-app .sr-agent-phase.is-active .sr-agent-phase__label {
+  color: var(--sr-primary);
+  font-weight: 500;
+}
+
+#survey-reporting-app .sr-agent-phase.is-done .sr-agent-phase__label {
+  color: #059669;
+}
+
+#survey-reporting-app .sr-agent-phases__status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--sr-primary);
+}
+
+#survey-reporting-app .sr-agent-phases__elapsed {
+  font-variant-numeric: tabular-nums;
+  color: var(--sr-text-muted);
+  font-size: 12px;
+}
+
+/* ── Agent write progress bar ────────────────────────── */
+
+#survey-reporting-app .sr-agent-write-bar {
+  margin-top: 10px;
+  height: 3px;
+  border-radius: 3px;
+  background: rgb(var(--sr-primary-rgb) / 0.08);
+  overflow: hidden;
+}
+
+#survey-reporting-app .sr-agent-write-bar__fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--sr-primary), #06b6d4);
+  transition: width 300ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── Agent abort message ─────────────────────────────── */
+
+#survey-reporting-app .sr-agent-abort-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin-top: 8px;
+  border-radius: 10px;
+  background: rgb(250 204 21 / 0.1);
+  border: 1px solid rgb(250 204 21 / 0.2);
+  color: #a16207;
+  font-size: 13px;
+}
+
+/* ── Visually hidden (a11y) ──────────────────────────── */
+
+#survey-reporting-app .sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ── Content editor card ─────────────────────────────── */
@@ -1147,18 +1419,6 @@
   background: var(--sr-surface-strong) !important;
 }
 
-#survey-reporting-app .sr-content-editor-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-#survey-reporting-app .sr-content-editor-head__title {
-  margin: 0;
-  font-size: 18px;
-}
-
 #survey-reporting-app .sr-content-editor-actions {
   display: flex;
   justify-content: space-between;
@@ -1167,24 +1427,6 @@
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--sr-border);
-}
-
-#survey-reporting-app .sr-content-streaming {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  margin-top: 10px;
-  border-radius: 10px;
-  background: rgb(var(--sr-primary-rgb) / 0.08);
-  color: var(--sr-primary);
-  font-size: 13px;
-  animation: sr-streaming-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes sr-streaming-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
 }
 
 /* ── Content guide list ──────────────────────────────── */
@@ -1232,6 +1474,21 @@
   }
   #survey-reporting-app .sr-wizard__content {
     animation-duration: 0ms !important;
+  }
+  #survey-reporting-app .sr-agent-panel__glow {
+    animation: none !important;
+  }
+  #survey-reporting-app .sr-agent-phase.is-active .sr-agent-phase__dot {
+    animation: none !important;
+  }
+  #survey-reporting-app .sr-agent-panel.is-complete {
+    animation: none !important;
+  }
+  #survey-reporting-app .sr-agent-phases {
+    animation: none !important;
+  }
+  #survey-reporting-app .sr-content-tree__item.is-generating .sr-content-tree__dot {
+    animation: none !important;
   }
 }
 

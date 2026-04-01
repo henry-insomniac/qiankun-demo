@@ -31,20 +31,29 @@
             class="sr-content-chapter-row"
             :class="{
               'is-submitted': getChapterMeta(item.id).submitted,
+              'is-generating': isChapterGenerating(item.id),
               'has-content': !!item.contentHtml,
             }"
           >
             <div class="sr-content-chapter-row__info">
               <strong>{{ item.title }}</strong>
-              <span v-if="getChapterMeta(item.id).submitted" class="sr-content-status sr-content-status--done">已确认</span>
-              <span v-else-if="item.contentHtml" class="sr-content-status sr-content-status--draft">草稿</span>
+              <span
+                v-if="isChapterGenerating(item.id)"
+                class="sr-content-status sr-content-status--generating"
+              >
+                <loading-outlined spin /> 生成中
+              </span>
+              <span
+                v-else-if="getChapterMeta(item.id).submitted"
+                class="sr-content-status sr-content-status--done"
+              >已确认</span>
+              <span
+                v-else-if="item.contentHtml"
+                class="sr-content-status sr-content-status--draft"
+              >草稿</span>
               <span v-else class="sr-content-status sr-content-status--empty">未编写</span>
             </div>
-            <a-button
-              size="small"
-              type="link"
-              @click="goToChapter(item.id)"
-            >
+            <a-button size="small" type="link" @click="goToChapter(item.id)">
               编辑正文
             </a-button>
           </div>
@@ -84,7 +93,7 @@
       <div class="sr-content-edit__sidebar">
         <a-card class="sr-page__card sr-content-tree-card">
           <span class="sr-section-eyebrow">章节目录</span>
-          <div class="sr-content-tree">
+          <div class="sr-content-tree" role="listbox" aria-label="章节列表">
             <div
               v-for="item in draft.outline.items"
               :key="item.id"
@@ -92,13 +101,25 @@
               :class="{
                 'is-active': item.id === draft.content.selectedChapterId,
                 'is-submitted': getChapterMeta(item.id).submitted,
+                'is-generating': isChapterGenerating(item.id),
+                'has-content': !getChapterMeta(item.id).submitted && !!item.contentHtml,
               }"
+              role="option"
+              :aria-selected="item.id === draft.content.selectedChapterId"
+              tabindex="0"
               @click="selectChapter(item.id)"
+              @keydown.enter="selectChapter(item.id)"
+              @keydown.space.prevent="selectChapter(item.id)"
             >
               <span class="sr-content-tree__dot" />
               <span class="sr-content-tree__label">{{ item.title }}</span>
+              <loading-outlined
+                v-if="isChapterGenerating(item.id)"
+                class="sr-content-tree__spin"
+                spin
+              />
               <check-circle-outlined
-                v-if="getChapterMeta(item.id).submitted"
+                v-else-if="getChapterMeta(item.id).submitted"
                 class="sr-content-tree__check"
               />
             </div>
@@ -109,42 +130,95 @@
       <!-- Middle: editor work area -->
       <div class="sr-content-edit__main">
         <a-card v-if="selectedItem" class="sr-page__card sr-content-editor-card">
-          <div class="sr-content-editor-head">
-            <h3 class="sr-content-editor-head__title">{{ selectedItem.title }}</h3>
-            <a-space>
-              <a-button
-                v-if="!draft.content.isGenerating && !selectedItem.contentHtml"
-                type="primary"
-                size="small"
-                @click="startGenerate"
+          <!-- Agent Run Panel -->
+          <div
+            class="sr-agent-panel"
+            :class="{
+              'is-running': draft.content.isGenerating,
+              'is-complete': justFinished,
+            }"
+          >
+            <div v-if="draft.content.isGenerating" class="sr-agent-panel__glow" />
+
+            <div class="sr-agent-panel__header">
+              <div class="sr-agent-panel__title-group">
+                <h3 class="sr-agent-panel__title">{{ selectedItem.title }}</h3>
+                <span class="sr-agent-panel__badge">{{ modeLabel }}</span>
+              </div>
+              <div class="sr-agent-panel__controls">
+                <a-button
+                  v-if="!draft.content.isGenerating && !selectedItem.contentHtml"
+                  type="primary"
+                  size="small"
+                  @click="startGenerate"
+                >
+                  <template #icon><thunderbolt-outlined /></template>
+                  生成正文
+                </a-button>
+                <a-button
+                  v-if="draft.content.isGenerating"
+                  size="small"
+                  danger
+                  @click="abortGenerate"
+                >
+                  停止生成
+                </a-button>
+                <a-button
+                  v-if="!draft.content.isGenerating && selectedItem.contentHtml"
+                  size="small"
+                  @click="regenerate"
+                >
+                  <template #icon><redo-outlined /></template>
+                  重新生成
+                </a-button>
+              </div>
+            </div>
+
+            <!-- Phase track -->
+            <transition name="sr-fade-slide">
+              <div
+                v-if="draft.content.isGenerating || justFinished"
+                class="sr-agent-phases"
               >
-                <template #icon><thunderbolt-outlined /></template>
-                生成正文
-              </a-button>
-              <a-button
-                v-if="draft.content.isGenerating"
-                size="small"
-                danger
-                @click="abortGenerate"
-              >
-                停止生成
-              </a-button>
-              <a-button
-                v-if="!draft.content.isGenerating && selectedItem.contentHtml"
-                size="small"
-                @click="regenerate"
-              >
-                <template #icon><redo-outlined /></template>
-                重新生成
-              </a-button>
-            </a-space>
+                <div class="sr-agent-phases__track">
+                  <div
+                    v-for="phase in phaseDisplay"
+                    :key="phase.key"
+                    class="sr-agent-phase"
+                    :class="{ 'is-done': phase.done, 'is-active': phase.active }"
+                  >
+                    <span class="sr-agent-phase__dot">
+                      <check-outlined v-if="phase.done" class="sr-agent-phase__check-icon" />
+                    </span>
+                    <span class="sr-agent-phase__label">{{ phase.label }}</span>
+                  </div>
+                </div>
+                <div v-if="draft.content.isGenerating" class="sr-agent-phases__status">
+                  <span>{{ currentPhaseLabel }}</span>
+                  <span class="sr-agent-phases__elapsed">{{ elapsedFormatted }}</span>
+                </div>
+              </div>
+            </transition>
+
+            <!-- Write progress bar -->
+            <div v-if="draft.content.currentPhase === 'writing'" class="sr-agent-write-bar">
+              <div
+                class="sr-agent-write-bar__fill"
+                :style="{ width: draft.content.writeProgress + '%' }"
+              />
+            </div>
           </div>
 
-          <!-- Streaming indicator -->
-          <div v-if="draft.content.isGenerating" class="sr-content-streaming">
-            <a-spin size="small" />
-            <span>AI 正在生成内容…</span>
-          </div>
+          <!-- Abort message -->
+          <transition name="sr-fade-slide">
+            <div v-if="abortMessage" class="sr-agent-abort-msg">
+              <info-circle-outlined />
+              <span>{{ abortMessage }}</span>
+            </div>
+          </transition>
+
+          <!-- Screen-reader status -->
+          <div class="sr-visually-hidden" aria-live="polite">{{ ariaStatus }}</div>
 
           <!-- CKEditor -->
           <ckeditor
@@ -216,8 +290,8 @@
           <a-button
             type="primary"
             block
-            @click="handleDownloadFull"
             :disabled="submittedCount === 0"
+            @click="handleDownloadFull"
           >
             <template #icon><download-outlined /></template>
             下载完整方案
@@ -260,16 +334,18 @@ import type { Editor } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
 import {
   CheckCircleOutlined,
-  ThunderboltOutlined,
-  RedoOutlined,
   CheckOutlined,
   DownloadOutlined,
+  InfoCircleOutlined,
+  LoadingOutlined,
+  RedoOutlined,
+  ThunderboltOutlined,
 } from "@ant-design/icons-vue";
 import { message } from "ant-design-vue";
 import { draft } from "@/lib/project-create-draft";
 import type { ChapterMeta } from "@/lib/project-create-draft";
-import { generateChapterContent } from "@/lib/mock-agent";
-import type { StreamController } from "@/lib/mock-agent";
+import { generateChapterContent, PHASE_LABELS, PHASE_ORDER } from "@/lib/mock-agent";
+import type { GenerationPhase, StreamController } from "@/lib/mock-agent";
 import { downloadChapterDocx, downloadFullDocx } from "@/lib/export-docx";
 
 const editorConfig = {
@@ -293,6 +369,10 @@ const editorConfig = {
 
 const streamCtrl = ref<StreamController | null>(null);
 const editorInstance = ref<Editor | null>(null);
+const justFinished = ref(false);
+const abortMessage = ref("");
+const elapsedMs = ref(0);
+let elapsedTimer: ReturnType<typeof setInterval> | null = null;
 
 function onEditorReady(editor: Editor) {
   editorInstance.value = editor;
@@ -309,12 +389,45 @@ const selectedItem = computed(
 
 const modeLabel = computed(() => {
   switch (draft.documentSettings.generationMode) {
-    case "ai-full": return "AI 全自动生成";
-    case "ai-assisted": return "AI 辅助编写";
-    case "manual": return "手动编写";
+    case "ai-full": return "AI 全自动";
+    case "ai-assisted": return "AI 辅助";
+    case "manual": return "手动";
     default: return "未选择";
   }
 });
+
+const phaseDisplay = computed(() => {
+  const current = draft.content.currentPhase as GenerationPhase;
+  const currentIdx = PHASE_ORDER.indexOf(current);
+
+  return PHASE_ORDER.map((key, i) => ({
+    key,
+    label: PHASE_LABELS[key],
+    done: justFinished.value || current === "done" || (currentIdx >= 0 && i < currentIdx),
+    active: !justFinished.value && key === current,
+  }));
+});
+
+const currentPhaseLabel = computed(() => {
+  const phase = draft.content.currentPhase as GenerationPhase;
+  return PHASE_LABELS[phase] ?? "";
+});
+
+const elapsedFormatted = computed(() => {
+  const s = Math.floor(elapsedMs.value / 1000);
+  const tenths = Math.floor((elapsedMs.value % 1000) / 100);
+  return `${s}.${tenths}s`;
+});
+
+const ariaStatus = computed(() => {
+  if (draft.content.isGenerating) return `正在生成：${currentPhaseLabel.value}`;
+  if (justFinished.value) return "生成完成";
+  return "";
+});
+
+function isChapterGenerating(id: string): boolean {
+  return draft.content.isGenerating && draft.content.generatingChapterId === id;
+}
 
 function getChapterMeta(id: string): ChapterMeta {
   if (!draft.content.chapterMeta[id]) {
@@ -352,34 +465,60 @@ function onEditorUpdate(...args: unknown[]) {
   }
 }
 
+function startElapsedTimer() {
+  elapsedMs.value = 0;
+  elapsedTimer = setInterval(() => { elapsedMs.value += 100; }, 100);
+}
+
+function stopElapsedTimer() {
+  if (elapsedTimer) {
+    clearInterval(elapsedTimer);
+    elapsedTimer = null;
+  }
+}
+
 function startGenerate() {
   const item = selectedItem.value;
   if (!item) return;
 
+  justFinished.value = false;
+  abortMessage.value = "";
   draft.content.isGenerating = true;
+  draft.content.generatingChapterId = item.id;
+  draft.content.currentPhase = "";
+  draft.content.writeProgress = 0;
   item.contentHtml = "";
 
-  const editor = editorInstance.value;
-  if (editor) {
-    editor.setData("");
-  }
+  startElapsedTimer();
 
-  const ctrl = generateChapterContent(
-    item,
-    (accumulated) => {
+  const editor = editorInstance.value;
+  if (editor) editor.setData("");
+
+  const ctrl = generateChapterContent(item, {
+    onChunk(accumulated, progress) {
       item.contentHtml = accumulated;
-      if (editor) {
-        editor.setData(accumulated);
-      }
+      draft.content.writeProgress = progress;
+      if (editor) editor.setData(accumulated);
     },
-    () => {
+    onPhase(phase) {
+      draft.content.currentPhase = phase;
+    },
+    onDone() {
       draft.content.isGenerating = false;
+      draft.content.generatingChapterId = "";
+      draft.content.currentPhase = "";
+      draft.content.writeProgress = 0;
+      stopElapsedTimer();
       streamCtrl.value = null;
+
+      justFinished.value = true;
+      setTimeout(() => { justFinished.value = false; }, 2500);
+
       const meta = getChapterMeta(item.id);
       meta.generatedAt = new Date().toISOString();
       meta.humanEdited = false;
     },
-  );
+  });
 
   streamCtrl.value = ctrl;
 }
@@ -387,7 +526,14 @@ function startGenerate() {
 function abortGenerate() {
   streamCtrl.value?.abort();
   draft.content.isGenerating = false;
+  draft.content.generatingChapterId = "";
+  draft.content.currentPhase = "";
+  draft.content.writeProgress = 0;
+  stopElapsedTimer();
   streamCtrl.value = null;
+
+  abortMessage.value = "生成已中止，当前内容已保留为草稿";
+  setTimeout(() => { abortMessage.value = ""; }, 3500);
 }
 
 function regenerate() {
@@ -406,6 +552,15 @@ function submitChapter() {
   const meta = getChapterMeta(item.id);
   meta.submitted = true;
   message.success(`「${item.title}」已确认提交`);
+
+  const nextUnsubmitted = draft.outline.items.find(
+    (i) => i.id !== item.id && !getChapterMeta(i.id).submitted,
+  );
+  if (nextUnsubmitted) {
+    setTimeout(() => {
+      draft.content.selectedChapterId = nextUnsubmitted.id;
+    }, 1200);
+  }
 }
 
 async function handleDownloadChapter() {
@@ -430,5 +585,6 @@ async function handleDownloadFull() {
 
 onBeforeUnmount(() => {
   streamCtrl.value?.abort();
+  stopElapsedTimer();
 });
 </script>

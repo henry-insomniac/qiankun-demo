@@ -36,39 +36,93 @@ function getParagraphs(title: string): string[] {
   return GENERIC_PARAGRAPHS;
 }
 
+export type GenerationPhase =
+  | "preparing"
+  | "organizing"
+  | "writing"
+  | "reviewing"
+  | "done";
+
+export const PHASE_LABELS: Record<GenerationPhase, string> = {
+  preparing: "准备上下文",
+  organizing: "组织章节结构",
+  writing: "流式写作",
+  reviewing: "完成校对",
+  done: "生成完成",
+};
+
+export const PHASE_ORDER: GenerationPhase[] = [
+  "preparing",
+  "organizing",
+  "writing",
+  "reviewing",
+];
+
 export interface StreamController {
   abort: () => void;
 }
 
+export interface GenerateCallbacks {
+  onChunk: (accumulatedHtml: string, progress: number) => void;
+  onPhase: (phase: GenerationPhase) => void;
+  onDone: () => void;
+}
+
 export function generateChapterContent(
   item: OutlineItem,
-  onChunk: (accumulatedHtml: string) => void,
-  onDone: () => void,
+  callbacks: GenerateCallbacks,
 ): StreamController {
+  const { onChunk, onPhase, onDone } = callbacks;
   const paragraphs = getParagraphs(item.title);
   let idx = 0;
   let accumulated = "";
   let aborted = false;
+  const timers: ReturnType<typeof setTimeout>[] = [];
+  let writingInterval: ReturnType<typeof setInterval> | null = null;
 
-  const interval = setInterval(() => {
-    if (aborted) {
-      clearInterval(interval);
-      return;
-    }
-    if (idx < paragraphs.length) {
-      accumulated += paragraphs[idx];
-      onChunk(accumulated);
-      idx++;
-    } else {
-      clearInterval(interval);
-      onDone();
-    }
-  }, 350);
+  function schedule(fn: () => void, delay: number) {
+    const t = setTimeout(() => {
+      if (!aborted) fn();
+    }, delay);
+    timers.push(t);
+  }
+
+  onPhase("preparing");
+
+  schedule(() => {
+    onPhase("organizing");
+
+    schedule(() => {
+      onPhase("writing");
+
+      writingInterval = setInterval(() => {
+        if (aborted) {
+          if (writingInterval) clearInterval(writingInterval);
+          return;
+        }
+        if (idx < paragraphs.length) {
+          accumulated += paragraphs[idx];
+          idx++;
+          onChunk(accumulated, Math.round((idx / paragraphs.length) * 100));
+        } else {
+          if (writingInterval) clearInterval(writingInterval);
+          writingInterval = null;
+
+          onPhase("reviewing");
+          schedule(() => {
+            onPhase("done");
+            onDone();
+          }, 400);
+        }
+      }, 350);
+    }, 500);
+  }, 600);
 
   return {
-    abort: () => {
+    abort() {
       aborted = true;
-      clearInterval(interval);
+      timers.forEach(clearTimeout);
+      if (writingInterval) clearInterval(writingInterval);
     },
   };
 }
